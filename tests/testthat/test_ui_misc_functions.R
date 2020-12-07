@@ -10,6 +10,11 @@ test_that("set_app_parameters", {
 test_that("get_url_parameters", {
     result <- get_url_parameters(NULL)
     expect_equal(result, list(), "get_url_parameters")
+    
+    mockSession <- list()
+    mockSession$clientData <- list(url_search = "?foo=123&bar=somestring")
+    result <- get_url_parameters(mockSession)
+    expect_equal(result, list(foo = "123", bar = "somestring"))
 })
 
 test_that("fw_get_loglevel", {
