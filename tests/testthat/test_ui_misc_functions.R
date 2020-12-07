@@ -7,14 +7,15 @@ test_that("set_app_parameters", {
     expect_null(result, "set_app_parameters")
 })
 
-test_that("get_url_parameters", {
+test_that("get_url_parameters - NULL", {
     result <- get_url_parameters(NULL)
     expect_equal(result, list(), "get_url_parameters")
-    
-    mockSession <- list()
-    mockSession$clientData <- list(url_search = "?foo=123&bar=somestring")
-    result <- get_url_parameters(mockSession)
-    expect_equal(result, list(foo = "123", bar = "somestring"))
+})
+
+test_that("get_url_parameters", {
+    fake_session <- list(clientData = list(url_search = "&test1=ABC&test2=123"))
+    result <- get_url_parameters(fake_session)
+    expect_equal(result, list(test1 = "ABC", test2 = "123"), "get_url_parameters")
 })
 
 test_that("fw_get_loglevel", {
@@ -39,18 +40,21 @@ test_that("fw_get_user_log", {
 
 test_that("setup_logging", {
     result <- shiny::isolate(.setup_logging(NULL, periscope:::fw_get_user_log()))
-    expect_true(any(class(result) %in% c("reactiveExpr", "reactive", "function")))
+    expect_true(shiny::is.reactive(result))
 })
 
 test_that("setup_logging existing log", {
     logger <- periscope:::fw_get_user_log()
     file.create(paste0(paste(log_directory, logger$name, sep = .Platform$file.sep), ".log"))
-    
+
     result <- shiny::isolate(.setup_logging(NULL, logger))
-    expect_true(any(class(result) %in% c("reactiveExpr", "reactive", "function")))
+    expect_true(shiny::is.reactive(result))
 })
 
 test_that("fw_reset_app_options", {
     result <- periscope:::fw_reset_app_options()
     expect_null(result, "fw_reset_app_options")
 })
+
+# clean up
+unlink("log", TRUE)

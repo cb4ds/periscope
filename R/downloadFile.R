@@ -108,7 +108,7 @@ downloadFileButton <- function(id,
 #' @param output provided by \code{shiny::callModule}
 #' @param session provided by \code{shiny::callModule}
 #' \cr \cr
-#' @param logger \link[logging:logging-package]{logging} logger to use
+#' @param logger logger to use
 #' @param filenameroot the base text used for user-downloaded file - can be
 #' either a character string or a reactive expression that returns a character
 #' string
@@ -129,7 +129,6 @@ downloadFileButton <- function(id,
 #' @seealso \link[periscope]{downloadFile_ValidateTypes}
 #' @seealso \link[periscope]{downloadFile_AvailableTypes}
 #' @seealso \link[shiny]{callModule}
-#' @seealso \link[logging:logging-package]{logging}
 #'
 #' @examples 
 #' # Inside server_local.R
@@ -210,14 +209,17 @@ downloadFile <- function(input, output, session, logger,
         }
         # excel file
         else if (type == "xlsx") {
-            if ((class(data) == "Workbook") && ("openxlsx" %in% attributes(class(data)))) {
-                openxlsx::saveWorkbook(data, file)
-            }
-            else {
-                show_rownames <- attr(data, "show_rownames")
-                openxlsx::write.xlsx(data, file, 
-                                     asTable   = TRUE, 
-                                     row.names = !is.null(show_rownames) && show_rownames)
+            if ("openxlsx" %in% utils::installed.packages()) {
+                if ((class(data) == "Workbook") && ("openxlsx" %in% attributes(class(data)))) {
+                    openxlsx::saveWorkbook(data, file)
+                } else {
+                    show_rownames <- attr(data, "show_rownames")
+                        openxlsx::write.xlsx(data, file, 
+                                             asTable   = TRUE, 
+                                             row.names = !is.null(show_rownames) && show_rownames)
+                }
+            } else {
+                writexl::write_xlsx(data, file)
             }
         }
         # text file processing
@@ -230,17 +232,17 @@ downloadFile <- function(input, output, session, logger,
             }
             else {
                 msg <- paste(type, "could not be processed")
-                logging::logwarn(msg)
+                logwarn(msg)
                 warning(msg)
             }
         }
         # error - type not handled
         else {
             msg <- paste(type, "not implemented as a download type")
-            logging::logwarn(msg)
+            logwarn(msg)
             warning(msg)
         }
-        logging::loginfo(paste("File downloaded in browser: <",
+        loginfo(paste("File downloaded in browser: <",
                                filename(), ">"), logger = logger)
     }
 
@@ -290,7 +292,7 @@ downloadFile <- function(input, output, session, logger,
             else {
                 msg <- paste("Unsupported plot type for ggplot download - ",
                              "must be in: <png, jpeg, tiff, bmp>")
-                logging::logwarn(msg)
+                logwarn(msg)
                 warning(msg)
             }
         }
@@ -308,7 +310,7 @@ downloadFile <- function(input, output, session, logger,
             else {
                 msg <- paste("Unsupported plot type for lattice download - ",
                              "must be in: <png, jpeg, tiff, bmp>")
-                logging::logwarn(msg)
+                logwarn(msg)
                 warning(msg)
             }
         }
@@ -316,10 +318,10 @@ downloadFile <- function(input, output, session, logger,
         # ------- should really never be hit
         else {
             msg <- paste(type, "not implemented as a download type")
-            logging::logwarn(msg)
+            logwarn(msg)
             warning(msg)
         }
-        logging::loginfo(paste("File downloaded in browser: <",
+        loginfo(paste("File downloaded in browser: <",
                                filename(), ">"), logger = logger)
     }
 }

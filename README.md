@@ -2,8 +2,11 @@
 title:  "Periscope Shiny Application Framework"
 output: 
     html_document:
-        self_contained: no
+        self_contained: yes
 ---
+
+<a href="https://periscopeapps.org"><img src="vignettes/images/hexagon.png" align="left" width="175"></a>
+
 <!-- Badge Location -->
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/periscope?color=9bc2cf)](https://cran.r-project.org/package=periscope)
 [![CRAN_Downloads_Badge](https://cranlogs.r-pkg.org/badges/grand-total/periscope?color=9bc2cf)](https://cran.r-project.org/package=periscope)
@@ -59,5 +62,14 @@ runApp('sampleapp1')
 library(periscope)
 create_new_application("sampleapp2", location = tempdir(), sampleapp = TRUE, rightsidebar = TRUE)
 runApp('sampleapp2')
+
+```
+
+#### Sample application - custom styling
+
+```r
+library(periscope)
+create_new_application("sampleapp3", location = tempdir(), sampleapp = TRUE, style = list(skin = "green"))
+runApp('sampleapp3')
 
 ```
