@@ -15,6 +15,8 @@
 #' @param resetbutton whether the reset button should be added on the Advanced (left) sidebar.
 #' @param rightsidebar parameter to set the right sidebar. It can be TRUE/FALSE or a character 
 #' containing the name of a shiny::icon().
+#' @param leftsidebar whether the left sidebar should be enabled.
+#' @param style list containing application styling properties. By default the skin is blue.
 #'
 #' @section Name:
 #' The \code{name} directory must not exist in \code{location}.  If the code
@@ -93,6 +95,7 @@
 #'  }
 #'
 #'@seealso \link[shiny:icon]{shiny:icon()}
+#'@seealso \link[shinydashboard:dashboardPage]{shinydashboard:dashboardPage()}
 #'
 #'@examples
 #' # sample app named 'mytestapp' created in a temp dir
@@ -103,10 +106,14 @@
 #' rightsidebar = "table")
 #' 
 #' # blank app named 'myblankapp' created in a temp dir
-#' create_new_application(name = 'mytestapp', location = tempdir())
+#' create_new_application(name = 'myblankapp', location = tempdir())
+#' # blank app named 'myblankapp' with a green skin created in a temp dir
+#' create_new_application(name = 'myblankapp', location = tempdir(), style = list(skin = "green"))
+#' # blank app named 'myblankapp' without a left sidebar created in a temp dir
+#' create_new_application(name = 'myblankapp', location = tempdir(), leftsidebar = FALSE)
 #'
 #' @export
-create_new_application <- function(name, location, sampleapp = FALSE, resetbutton = TRUE, rightsidebar = FALSE) {
+create_new_application <- function(name, location, sampleapp = FALSE, resetbutton = TRUE, rightsidebar = FALSE, leftsidebar = TRUE, style = list(skin = "blue")) {
     usersep <- .Platform$file.sep
     newloc <- paste(location, name, sep = usersep)
 
@@ -131,9 +138,19 @@ create_new_application <- function(name, location, sampleapp = FALSE, resetbutto
                 stop("Framework creation could not proceed, invalid type for rightsidebar, only logical or character allowed")
             }
         }
+        if (!is.null(style)) {
+            if (class(style) == "list") {
+                if (!identical(intersect("skin", names(style)), character(0)) && !identical(class(style$skin), "character")) {
+                    stop("Framework creation could not proceed, invalid type for skin, only character allowed. See ?shinydashboard::dashboardPage for supported colors.")  
+                }
+            } else {
+                stop("Framework creation could not proceed, invalid type for style, only list allowed")  
+            }
+        }
+        
         .create_dirs(newloc, usersep)
-        .copy_fw_files(newloc, usersep, resetbutton, dashboard_plus, right_sidebar_icon)
-        .copy_program_files(newloc, usersep, sampleapp, resetbutton, dashboard_plus)
+        .copy_fw_files(newloc, usersep, resetbutton, dashboard_plus, leftsidebar, right_sidebar_icon, style)
+        .copy_program_files(newloc, usersep, sampleapp, resetbutton, leftsidebar, dashboard_plus)
 
         message("Framework creation was successful.")
     }
@@ -164,7 +181,7 @@ create_new_application <- function(name, location, sampleapp = FALSE, resetbutto
 }
 
 # Create Framework Files ----------------------------
-.copy_fw_files <- function(newloc, usersep, resetbutton = TRUE, dashboard_plus = FALSE, right_sidebar_icon = NULL) {
+.copy_fw_files <- function(newloc, usersep, resetbutton = TRUE, dashboard_plus = FALSE, leftsidebar = TRUE, right_sidebar_icon = NULL, style = list(skin = "blue")) {
     files <- c("global.R",
                "server.R")
     if (dashboard_plus) {
@@ -181,17 +198,50 @@ create_new_application <- function(name, location, sampleapp = FALSE, resetbutto
     if (dashboard_plus) {
         file.rename(paste(newloc, "ui_plus.R", sep = usersep), paste(newloc, "ui.R", sep = usersep))
         if (!is.null(right_sidebar_icon)) {
+            ui_file <- file(paste(newloc, "ui.R", sep = usersep), open = "r+")
             writeLines(gsub("fw_create_header_plus\\(", paste0("fw_create_header_plus\\(sidebar_right_icon = '", right_sidebar_icon, "'"), 
-                            readLines(con = paste(newloc, "ui.R", sep = usersep))), 
-                       con = paste(newloc, "ui.R", sep = usersep))
+                            readLines(con = ui_file)), 
+                       con = ui_file)
+            close(ui_file)
         }
     }
-    if (!resetbutton) {
-        writeLines(gsub("fw_create_sidebar\\(", "fw_create_sidebar\\(resetbutton = FALSE", 
-                        readLines(con = paste(newloc, "ui.R", sep = usersep))), 
-                   con = paste(newloc, "ui.R", sep = usersep))
+    if (leftsidebar) {
+        if (!resetbutton) {
+            ui_file <- file(paste(newloc, "ui.R", sep = usersep), open = "r+")
+            writeLines(gsub("fw_create_sidebar\\(", "fw_create_sidebar\\(resetbutton = FALSE", 
+                            readLines(con = ui_file)), 
+                       con = ui_file)
+            close(ui_file)
+        }
+    } else {
+        ui_file    <- file(paste(newloc, "ui.R", sep = usersep), open = "r")
+        ui_content <- readLines(con = ui_file)
+        close(ui_file)
+        source_positions <- grep("source", ui_content)
+        remove_positions <- seq(source_positions[1], source_positions[2] - 1)
+        ui_content       <- ui_content[-remove_positions]
+        if (resetbutton) {
+            ui_content <- gsub("fw_create_sidebar\\(\\)", "fw_create_sidebar\\(showsidebar = FALSE\\)", ui_content)
+        } else {
+            ui_content <- gsub("fw_create_sidebar\\(\\)", "fw_create_sidebar\\(showsidebar = FALSE, resetbutton = FALSE\\)", ui_content)
+        }
+        ui_file    <- file(paste(newloc, "ui.R", sep = usersep), open = "w")
+        writeLines(ui_content, con = ui_file)
+        close(ui_file)
     }
-
+    # styling
+    if (!is.null(style) && identical(class(style), "list") && length(style) > 0 &&
+        !identical(intersect("skin", names(style)), character(0)) && !identical(style, list(skin = "blue"))) {
+        skin_value  <- style$skin
+        ui_file     <- file(paste(newloc, "ui.R", sep = usersep), open = "r+")
+        ui_content  <- readLines(con = ui_file)
+        ui_content[length(ui_content)]     <- paste0(substr(ui_content[length(ui_content)], 1, nchar(ui_content[length(ui_content)]) - 1), ",")
+        white_space <- paste(rep(" ", ifelse(dashboard_plus, nchar("dashboardPagePlus"), nchar("dashboardPage"))), collapse = "")
+        ui_content[length(ui_content) + 1] <- sprintf("%s skin = '%s')", white_space, skin_value)
+        writeLines(ui_content, con = ui_file)
+        close(ui_file)
+    }
+    
     #subdir copies
     imgs <- c("loader.gif", "tooltip.png")
     for (file in imgs) {
@@ -206,41 +256,42 @@ create_new_application <- function(name, location, sampleapp = FALSE, resetbutto
 }
 
 # Create Program Files ----------------------------
-.copy_program_files <- function(newloc, usersep, sampleapp, resetbutton = TRUE, dashboard_plus = FALSE) {
-    files <- c("global.R",
-               "server_global.R",
-               "server_local.R",
-               "ui_body.R")
-    if (sampleapp && !resetbutton) {
-        files <- c(files, "ui_sidebar_no_reset.R")
-    } else {
-        files <- c(files, "ui_sidebar.R")
+.copy_program_files <- function(newloc, usersep, sampleapp, resetbutton = TRUE, leftsidebar = TRUE, dashboard_plus = FALSE) {
+    files <- list("global.R"        = "global.R",
+                  "server_global.R" = "server_global.R",
+                  "server_local.R"  = "server_local.R",
+                  "ui_body.R"       = "ui_body.R")
+    
+    if (leftsidebar) {
+        files["ui_sidebar.R"] <- "ui_sidebar.R"
     }
-               
     if (dashboard_plus) {
-        files <- c(files, "ui_sidebar_right.R")
-        if (sampleapp) {
-            files <- c(files, "server_local_plus.R")
-        }
-    } else {
-        files <- c(files, "server_local.R")
+        files["ui_sidebar_right.R"] <- "ui_sidebar_right.R"
     }
-
+    if (sampleapp) {
+        if (dashboard_plus) {
+            if (leftsidebar) {
+                names(files)[grepl("server_local.R", names(files))] <- "server_local_plus.R"
+            } else {
+                names(files)[grepl("server_local.R", names(files))] <- "server_local_plus_no_left.R"
+            }
+        } else if (!dashboard_plus && !leftsidebar) {
+            names(files)[grepl("server_local.R", names(files))] <- "server_local_no_left.R"
+        }
+        if (leftsidebar && !resetbutton) {
+            names(files)[grepl("ui_sidebar.R", names(files))] <- "ui_sidebar_no_reset.R"
+        }
+    }
+    
     targetdir <- paste(newloc, "program", sep = usersep)
     sourcedir <- paste("fw_templ",
                        ifelse(sampleapp, "p_example", "p_blank"),
                        sep = usersep)
 
-    for (file in files) {
+    for (file in names(files)) {
         writeLines(readLines(
             con = system.file(sourcedir, file, package = "periscope")),
-            con = paste(targetdir, file, sep = usersep))
-    }
-    if (sampleapp && dashboard_plus) {
-        file.rename(paste(targetdir, "server_local_plus.R", sep = usersep), paste(targetdir, "server_local.R", sep = usersep))
-    }
-    if (sampleapp && !resetbutton) {
-        file.rename(paste(targetdir, "ui_sidebar_no_reset.R", sep = usersep), paste(targetdir, "ui_sidebar.R", sep = usersep))
+            con = paste(targetdir, files[[file]], sep = usersep))
     }
 
     #subdir copies for sampleapp
