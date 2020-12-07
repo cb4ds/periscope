@@ -271,4 +271,7 @@ test_that("fw_create_right_sidebar", {
 test_that("add_ui_sidebar_right", {
     result <- add_ui_sidebar_right(elementlist = NULL, append = TRUE)
     expect_null(result, "add_ui_sidebar_right")
+    
+    result <- add_ui_sidebar_right(elementlist = NULL, append = FALSE)
+    expect_null(result, "add_ui_sidebar_right")
 })

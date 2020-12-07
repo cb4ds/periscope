@@ -66,6 +66,20 @@ test_that("create_new_application sample right_sidebar", {
     expect_message(create_new_application(name = appTemp.name, location = appTemp.dir, sampleapp = TRUE, rightsidebar = right_sidebar), 
                    "Framework creation was successful.")
     expect_cleanup_create_new_application(appTemp, sampleapp = TRUE, dashboard_plus = !is.null(right_sidebar))
+    
+    appTemp       <- tempfile(pattern = "TestThatApp", tmpdir = appTemp.dir)
+    appTemp.name  <- gsub('\\\\|/', '', (gsub(appTemp.dir, "", appTemp, fixed = T)))
+    
+    expect_message(create_new_application(name = appTemp.name, location = appTemp.dir, sampleapp = TRUE, rightsidebar = TRUE), 
+                   "Framework creation was successful.")
+    expect_cleanup_create_new_application(appTemp, sampleapp = TRUE, dashboard_plus = !is.null(right_sidebar))
+    
+    appTemp       <- tempfile(pattern = "TestThatApp", tmpdir = appTemp.dir)
+    appTemp.name  <- gsub('\\\\|/', '', (gsub(appTemp.dir, "", appTemp, fixed = T)))
+    
+    expect_error(create_new_application(name = appTemp.name, location = appTemp.dir, sampleapp = TRUE, rightsidebar = 1), 
+                   "Framework creation could not proceed, invalid type for rightsidebar, only logical or character allowed")
+    
 })
 
 test_that("create_new_application no reset button", {
