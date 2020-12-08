@@ -83,7 +83,7 @@ test_that("create_new_application sample right_sidebar", {
     
     expect_message(create_new_application(name = appTemp.name, location = appTemp.dir, sampleapp = TRUE, rightsidebar = TRUE), 
                    "Framework creation was successful.")
-    expect_cleanup_create_new_application(appTemp, sampleapp = TRUE, dashboard_plus = !is.null(right_sidebar))
+    expect_cleanup_create_new_application(appTemp, sampleapp = TRUE, dashboard_plus = TRUE)
     
     appTemp       <- tempfile(pattern = "TestThatApp", tmpdir = appTemp.dir)
     appTemp.name  <- gsub('\\\\|/', '', (gsub(appTemp.dir, "", appTemp, fixed = T)))
