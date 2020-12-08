@@ -89,8 +89,17 @@ test_that("create_new_application sample right_sidebar", {
     appTemp.name  <- gsub('\\\\|/', '', (gsub(appTemp.dir, "", appTemp, fixed = T)))
     
     expect_error(create_new_application(name = appTemp.name, location = appTemp.dir, sampleapp = TRUE, rightsidebar = 1), 
-                   "Framework creation could not proceed, invalid type for rightsidebar, only logical or character allowed")
+                 "Framework creation could not proceed, invalid type for rightsidebar, only logical or character allowed")
+})
+
+test_that("create_new_application sample right_sidebar without left_sidebar", {
+    appTemp.dir   <- tempdir()
+    appTemp       <- tempfile(pattern = "TestThatApp", tmpdir = appTemp.dir)
+    appTemp.name  <- gsub('\\\\|/', '', (gsub(appTemp.dir, "", appTemp, fixed = T)))
     
+    expect_message(create_new_application(name = appTemp.name, location = appTemp.dir, sampleapp = TRUE, rightsidebar = TRUE, leftsidebar = FALSE), 
+                   "Framework creation was successful.")
+    expect_cleanup_create_new_application(appTemp, sampleapp = TRUE, dashboard_plus = TRUE, leftsidebar = FALSE)
 })
 
 test_that("create_new_application sample invalid right_sidebar", {
@@ -120,6 +129,16 @@ test_that("create_new_application no reset button", {
     expect_message(create_new_application(name = appTemp.name, location = appTemp.dir, sampleapp = TRUE, resetbutton = FALSE), 
                    "Framework creation was successful.")
     expect_cleanup_create_new_application(appTemp, sampleapp = TRUE)
+})
+
+test_that("create_new_application no reset button, no left sidebar", {
+    appTemp.dir   <- tempdir()
+    appTemp       <- tempfile(pattern = "TestThatApp", tmpdir = appTemp.dir)
+    appTemp.name  <- gsub('\\\\|/', '', (gsub(appTemp.dir, "", appTemp, fixed = T)))
+    
+    expect_message(create_new_application(name = appTemp.name, location = appTemp.dir, sampleapp = TRUE, resetbutton = FALSE, leftsidebar = FALSE), 
+                   "Framework creation was successful.")
+    expect_cleanup_create_new_application(appTemp, sampleapp = TRUE, leftsidebar = FALSE)
 })
 
 test_that("create_new_application custom style", {
