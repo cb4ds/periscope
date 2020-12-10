@@ -122,8 +122,8 @@ test_that("LoggingToConsole", {
     periscope:::addHandler(writeToConsole, level = "DEBUG")
     
     expect_equal(with(periscope:::getLogger(), names(handlers)), c("basic.stdout", "writeToConsole"))
-    periscope:::logdebug("log generated for testing")
-    periscope:::loginfo("log generated for testing")
+    logdebug("log generated for testing")
+    loginfo("log generated for testing")
     
     succeed()
 })
@@ -136,10 +136,10 @@ test_that("LoggingToFile", {
     periscope:::addHandler(writeToFile, file = test_file_name[[1]], level = "DEBUG")
     
     expect_equal(with(periscope:::getLogger(), names(handlers)), c("writeToFile"))
-    periscope:::logerror("log generated for testing")
-    periscope:::logwarn("log generated for testing")
-    periscope:::loginfo("log generated for testing")
-    periscope:::logdebug("log generated for testing")
+    logerror("log generated for testing")
+    logwarn("log generated for testing")
+    loginfo("log generated for testing")
+    logdebug("log generated for testing")
     periscope:::logfinest("log generated for testing")
     periscope:::logfiner("log generated for testing")
     periscope:::logfine("log generated for testing")
@@ -172,7 +172,7 @@ test_that("Msgcomposer - setMsgComposer(), resetMsgComposer()", {
     env <- env_setup()
     
     periscope:::setMsgComposer(function(msg, ...) { paste(msg, "comp") })
-    periscope:::loginfo("test")
+    loginfo("test")
     
     expect_equal(env$logged, "INFO::test comp")
     expect_error(periscope:::setMsgComposer(function(msgX, ...) { paste(msg, "comp") }), 
@@ -184,7 +184,7 @@ test_that("Msgcomposer - setMsgComposer(), resetMsgComposer()", {
     # reset_composer
     env <- env_setup()
     periscope:::resetMsgComposer()
-    periscope:::loginfo("test")
+    loginfo("test")
     
     expect_equal(env$logged, "INFO::test")
     expect_error(periscope:::resetMsgComposer(NULL),
@@ -194,8 +194,8 @@ test_that("Msgcomposer - setMsgComposer(), resetMsgComposer()", {
     env <- env_setup()
     
     periscope:::setMsgComposer(function(msg, ...) { paste(msg, "comp") }, container = "named")
-    periscope:::loginfo("test")
-    periscope:::loginfo("test", logger = "named")
+    loginfo("test")
+    loginfo("test", logger = "named")
     
     expect_equal(env$logged, c("INFO::test", "INFO:named:test comp"))
 })
