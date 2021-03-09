@@ -1,5 +1,4 @@
 context("periscope - downloadablePlot")
-skip_on_cran()
 
 
 check_common_downloadablePlotUI_properties <- function(result.children) {

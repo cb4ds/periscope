@@ -1,7 +1,7 @@
 Package: periscope
 Type: Package
 Title: Enterprise Streamlined 'Shiny' Application Framework
-Version: 0.5.4
+Version: 0.6.0.9001
 Authors@R: c(
     person("Constance", "Brett", email="connie@aggregate-genius.com", role = c("aut", "cre")),
     person("Isaac", "Neuhaus", role = "aut", comment = "canvasXpress JavaScript Library Maintainer"),
@@ -24,7 +24,7 @@ Depends:
 Imports:
     shiny (>= 1.1),
     shinydashboard (>= 0.5),
-    shinydashboardPlus (<= 2.0),
+    shinydashboardPlus,
     shinyBS (>= 0.61),
     lubridate (>= 1.6),
     DT (>= 0.2),
