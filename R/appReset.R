@@ -25,7 +25,7 @@
 }
 
 # Module Server Function
-.appReset <- function(input, output, session, logger) {
+.appReset <- function(input, output, session, logger = periscope:::fw_get_user_log()) {
     shiny::observe({
         pending  <- shiny::isolate(input$resetPending)
         waittime <- shiny::isolate(.g_opts$reset_wait)
