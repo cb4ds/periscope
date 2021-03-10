@@ -150,8 +150,8 @@ downloadFileButton <- function(id,
 #' #            aspectratio = 1)
 #' 
 #' @export
-downloadFile <- function(input, output, session, logger,
-                         filenameroot, datafxns = list(),
+downloadFile <- function(input, output, session, logger = periscope:::fw_get_user_log(),
+                         filenameroot = "mytype2", datafxns = list(),
                          aspectratio = 1) {
 
     rootname <- filenameroot

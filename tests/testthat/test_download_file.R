@@ -30,3 +30,10 @@ test_that("downloadFile_AvailableTypes", {
 
     expect_equal(result, c("csv", "xlsx", "tsv", "txt", "png", "jpeg", "tiff", "bmp"))
 })
+
+test_that("downloadFile", {
+    # default parameters only
+    testServer(downloadFile, {
+        expect_silent(downloadFile)
+    })
+})
