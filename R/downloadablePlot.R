@@ -175,11 +175,11 @@ downloadablePlotUI <- function(id,
 #' #            visibleplot = myplotfxn)
 #'
 #' @export
-downloadablePlot <- function(input, output, session, logger,
-                             filenameroot,
+downloadablePlot <- function(input, output, session, logger = periscope:::fw_get_user_log(),
+                             filenameroot = "mydownload1",
                              aspectratio  = 1,
                              downloadfxns = list(),
-                             visibleplot) {
+                             visibleplot = function(){ggplot2::ggplot()}) {
 
     shiny::callModule(downloadFile,  "dplotButtonID",
                       logger, filenameroot, downloadfxns, aspectratio)

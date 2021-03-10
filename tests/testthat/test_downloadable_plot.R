@@ -61,3 +61,9 @@ test_that("downloadablePlotUI invalid btn_valign", {
                                       brushOpts          = NULL),
                    "center  is not a valid btn_valign input - using default value. Valid values: <'top', 'bottom'>")
 })
+
+test_that("downloadablePlot", {
+    testServer(downloadablePlot, {
+        expect_silent(downloadablePlot)
+    })
+})
