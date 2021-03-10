@@ -1,4 +1,4 @@
-# downloadableTable
+# downloadableTableUI
 
     [[1]]
     <span id="myid-dtableButtonDiv" class="periscope-downloadable-table-button" style="">
