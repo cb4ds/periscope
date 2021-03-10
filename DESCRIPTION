@@ -36,6 +36,6 @@ RoxygenNote: 7.1.1
 Suggests:
     knitr,
     rmarkdown,
-    testthat,
+    testthat (>= 3.0.2),
     openxlsx (>= 3.0)
 VignetteBuilder: knitr
