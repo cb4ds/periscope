@@ -144,7 +144,7 @@ downloadableTableUI <- function(id,
 #' # selectedrows is the reactive return value, captured for later use
 #' 
 #' @export
-downloadableTable <- function(input, output, session, logger = periscope:::fw_get_user_log(),
+downloadableTable <- function(input, output, session, logger = fw_get_user_log(),
                               filenameroot = "mydownload1", downloaddatafxns = list(),
                               tabledata = function() {data.frame()}, rownames = TRUE, caption = NULL, 
                               selection = NULL) {
