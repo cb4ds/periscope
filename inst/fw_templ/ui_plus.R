@@ -28,7 +28,7 @@ if (utils::packageVersion('shinydashboardPlus') < 2) {
 }
 
 do.call(plus_fxn, c(list(periscope:::fw_create_header_plus(),
-                         periscope:::fw_create_sidebar(showsidebar = FALSE),
+                         periscope:::fw_create_sidebar(),
                          periscope:::fw_create_body(),
                          periscope:::fw_create_right_sidebar()),
                     addl_opts))
