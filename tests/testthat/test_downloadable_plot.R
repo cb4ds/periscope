@@ -63,7 +63,5 @@ test_that("downloadablePlotUI invalid btn_valign", {
 })
 
 test_that("downloadablePlot", {
-    testServer(downloadablePlot, {
-        expect_silent(downloadablePlot)
-    })
+    testServer(downloadablePlot, {expect_silent(downloadablePlot)})
 })

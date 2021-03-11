@@ -33,7 +33,5 @@ test_that("downloadFile_AvailableTypes", {
 
 test_that("downloadFile", {
     # default parameters only
-    testServer(downloadFile, {
-        expect_silent(downloadFile)
-    })
+    testServer(downloadFile, {expect_silent(downloadFile)})
 })

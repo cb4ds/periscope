@@ -6,7 +6,5 @@ test_that(".bodyFooterOutput", {
 })
 
 test_that(".bodyFooter", {
-    testServer(.bodyFooter, {
-        expect_silent(.bodyFooter)
-    })
+    testServer(.bodyFooter, {expect_silent(.bodyFooter)})
 })

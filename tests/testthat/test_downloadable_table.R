@@ -10,12 +10,8 @@ test_that("downloadableTableUI", {
 
 test_that("downloadableTable", {
     # default values only
-    testServer(downloadableTable, {
-        expect_silent(downloadableTable)
-    })
+    testServer(downloadableTable, {expect_silent(downloadableTable)})
     
-    testServer(downloadableTable, {
-        session$setInputs(dtableSingleSelect = "TRUE")
-        expect_silent(downloadableTable)
-    })
+    testServer(downloadableTable, {session$setInputs(dtableSingleSelect = "TRUE")
+        expect_silent(downloadableTable)})
 })
