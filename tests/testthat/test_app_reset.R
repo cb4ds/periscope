@@ -6,7 +6,6 @@ test_that(".appResetButton", {
 })
 
 test_that(".appReset - no reset button", {
-    session <- MockShinySession$new()
     # there is no reset button on the UI for the app
     expect_silent(.appReset(input = list(), 
                             output = list(), 

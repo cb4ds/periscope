@@ -32,6 +32,9 @@ test_that("downloadFile_AvailableTypes", {
 })
 
 test_that("downloadFile", {
-    # default parameters only
-    testServer(downloadFile, {expect_silent(downloadFile)})
+    expect_silent(downloadFile(input = list(),
+                               output = list(), 
+                               session = MockShinySession$new(),
+                               logger = periscope:::fw_get_user_log(),
+                               filenameroot = "mydownload1"))
 })
