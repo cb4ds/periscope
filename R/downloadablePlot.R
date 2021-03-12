@@ -175,8 +175,8 @@ downloadablePlotUI <- function(id,
 #' #            visibleplot = myplotfxn)
 #'
 #' @export
-downloadablePlot <- function(input, output, session, logger = fw_get_user_log(),
-                             filenameroot = "mydownload1",
+downloadablePlot <- function(input, output, session, logger,
+                             filenameroot,
                              aspectratio  = 1,
                              downloadfxns = list(),
                              visibleplot) {

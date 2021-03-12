@@ -63,5 +63,10 @@ test_that("downloadablePlotUI invalid btn_valign", {
 })
 
 test_that("downloadablePlot", {
-    testServer(downloadablePlot, {expect_silent(downloadablePlot)})
+    expect_error(testdownloadablePlot(input = list(),
+                                   output = list(), 
+                                   session = MockShinySession$new(),
+                                   logger = periscope:::fw_get_user_log(),
+                                   filenameroot = "mydownload1",
+                                   visibleplot = NULL))
 })
