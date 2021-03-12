@@ -5,17 +5,36 @@ test_that(".appResetButton", {
     expect_snapshot_output(.appResetButton("myid"))
 })
 
-test_that(".appReset", {
+test_that(".appReset - no reset button", {
+    session <- MockShinySession$new()
     # there is no reset button on the UI for the app
-    testServer(.appReset, {session$setInputs(resetPending = NULL)
-        expect_silent(.appReset)})
-    
-    testServer(.appReset, {session$setInputs(resetPending = FALSE, resetButton = TRUE)
-        expect_silent(.appReset)})
-    
-    testServer(.appReset, {session$setInputs(resetPending = TRUE, resetButton = FALSE)
-        expect_silent(.appReset)})
-    
-    testServer(.appReset, {session$setInputs(resetPending = FALSE, resetButton = FALSE)
-        expect_silent(.appReset)})
+    expect_silent(.appReset(input = list(), 
+                            output = list(), 
+                            session = MockShinySession$new(),
+                            logger = periscope:::fw_get_user_log()))
+})
+
+test_that(".appReset - reset button - no pending", {
+    session <- MockShinySession$new()
+    input <- list(resetButton = TRUE, resetPending = FALSE)
+    expect_silent(.appReset(input = input, 
+                            output = list(),
+                            session = MockShinySession$new(),
+                            logger = periscope:::fw_get_user_log()))
+})
+
+test_that(".appReset - no reset button - with pending", {
+    input <- list(resetButton = FALSE, resetPending = TRUE)
+    expect_silent(.appReset(input = input,
+                            output = list(),
+                            session = MockShinySession$new(),
+                            logger = periscope:::fw_get_user_log()))
+})
+
+test_that(".appReset - null reset button - with pending", {
+    input <- list(resetButton = NULL, resetPending = TRUE)
+    expect_silent(.appReset(input, 
+                            output = list(),
+                            session = MockShinySession$new(), 
+                            logger = periscope:::fw_get_user_log()))
 })
