@@ -9,9 +9,10 @@ test_that("downloadableTableUI", {
 })
 
 test_that("downloadableTable", {
-    # default values only
-    testServer(downloadableTable, {expect_silent(downloadableTable)})
-    
-    testServer(downloadableTable, {session$setInputs(dtableSingleSelect = "TRUE")
-        expect_silent(downloadableTable)})
+    expect_error(downloadableTable(input = list(),
+                                   output = list(), 
+                                   session = MockShinySession$new(),
+                                   logger = periscope:::fw_get_user_log(),
+                                   filenameroot = "mydownload1",
+                                   tabledata = NULL))
 })
