@@ -23,7 +23,7 @@ test_that(".appReset - no reset button - with pending", {
     # there is no reset button on the UI for the app
     suppressWarnings(testServer(.appReset,
                {session$setInputs(resetButton = FALSE, resetPending = TRUE)
-                   expect_silent(.appReset)}))
+                expect_silent(.appReset)}))
 })
 
 test_that(".appReset - reset button - with pending", {
@@ -34,7 +34,8 @@ test_that(".appReset - reset button - with pending", {
 
 test_that(".appReset", {
     expect_silent(.appReset(input = list(resetButton = TRUE, resetPending = FALSE),
-                                   output = list(), 
-                                   session = MockShinySession$setInputs(resetButton = TRUE, resetPending = FALSE),
-                                   logger = periscope:::fw_get_user_log()))
+                            output = list(), 
+                            session = MockShinySession$setInputs(resetButton = TRUE,
+                                                                 resetPending = FALSE),
+                            logger = periscope:::fw_get_user_log()))
 })
