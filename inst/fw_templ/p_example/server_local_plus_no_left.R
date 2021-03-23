@@ -134,6 +134,10 @@ output$alerts   <- renderUI({
                        label  = "Body",
                        style  = "info",
                        append = FALSE,
+                       width  = "25%"),
+             bsButton( "exampleRightAlert",
+                       label  = "Sidebar - Right",
+                       style  = "danger",
                        width  = "25%")) )
 })
 
