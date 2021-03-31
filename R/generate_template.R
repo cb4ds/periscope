@@ -6,7 +6,7 @@
 #' framework.  The application can be created either empty (default) or with a
 #' sample/documented example application.\cr \cr A running instance of the exact 
 #' sample application that will be created is
-#' \href{http://periscopeapps.org:3838/framework_template}{hosted here} if you
+#' \href{http://periscopeapps.org:3838/periscope_template}{hosted here} if you
 #' would like to see the sample application before creating your own copy.
 #'
 #' @param name name for the new application and directory
@@ -146,6 +146,10 @@ create_new_application <- function(name, location, sampleapp = FALSE, resetbutto
             } else {
                 stop("Framework creation could not proceed, invalid type for style, only list allowed")  
             }
+        }
+        
+        if (!(.g_sdp_installed)) {
+            stop('shinyDashboardPlus is not currently installed -- it is required to generate an application with a right sidebar.')
         }
         
         .create_dirs(newloc, usersep)
