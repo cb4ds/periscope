@@ -180,9 +180,7 @@ downloadablePlot <- function(input, output, session, logger,
                              aspectratio  = 1,
                              downloadfxns = list(),
                              visibleplot) {
-
-    shiny::callModule(downloadFile,  "dplotButtonID",
-                      logger, filenameroot, downloadfxns, aspectratio)
+    downloadFile("dplotButtonID", logger, filenameroot, downloadfxns, aspectratio)
 
     dpInfo <- shiny::reactiveValues(visibleplot = NULL,
                                     downloadfxns = NULL)

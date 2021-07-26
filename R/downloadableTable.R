@@ -149,8 +149,7 @@ downloadableTable <- function(input, output, session, logger,
                               tabledata, rownames = TRUE, caption = NULL, 
                               selection = NULL) {
 
-    shiny::callModule(downloadFile,  "dtableButtonID",
-                      logger, filenameroot, downloaddatafxns)
+    downloadFile("dtableButtonID", logger, filenameroot, downloaddatafxns)
     
     session$sendCustomMessage("downloadbutton_toggle",
                               message = list(btn  = session$ns("dtableButtonDiv"),

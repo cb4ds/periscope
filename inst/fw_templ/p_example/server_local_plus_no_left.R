@@ -114,7 +114,7 @@ output$download <- renderUI({
           "extensions and corresponding data functions with the ",
           "following code:"),
         p(pre("U: downloadFileButton('uiID', list(extensions))"),
-          pre("S: callModule(downloadFile, 'uiID', logger, 'filenameroot', list(datafxns)"),
+          pre("S: downloadFile('uiID', logger, 'filenameroot', list(datafxns)"),
           "Single Download: ",
           downloadFileButton("exampleDownload1", c("csv"), "csv"),
           "Multiple-choice Download: ",
@@ -197,12 +197,14 @@ loginfo("Be Sure to Remember to Log ALL user actions",
         logger = ss_userAction.Log)
 
 # -- Setup Download Modules with Functions we want called
-callModule(downloadFile, "exampleDownload1", ss_userAction.Log,
-           "examplesingle",
-           list(csv = load_data1))
-callModule(downloadFile, "exampleDownload2", ss_userAction.Log,
-           "examplemulti",
-           list(csv = load_data2, xlsx = load_data2, tsv = load_data2))
+downloadFile("exampleDownload1", 
+             ss_userAction.Log,
+             "examplesingle",
+             list(csv = load_data1))
+downloadFile("exampleDownload2",
+             ss_userAction.Log,
+             "examplemulti",
+             list(csv = load_data2, xlsx = load_data2, tsv = load_data2))
 callModule(downloadableTable, "exampleDT1",  ss_userAction.Log,
            "exampletable",
            list(csv = load_data3, tsv = load_data3),
