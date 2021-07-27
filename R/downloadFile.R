@@ -103,11 +103,7 @@ downloadFileButton <- function(id,
 #' Server-side function for the downloadFileButton.  This is a custom
 #' high-functionality button for file downloads supporting single or multiple
 #' download types.  The server function is used to provide the data for download.
-#'
-#' @param input provided by \code{shiny::callModule}
-#' @param output provided by \code{shiny::callModule}
-#' @param session provided by \code{shiny::callModule}
-#' \cr \cr
+#' @param id string represents the module id
 #' @param logger logger to use
 #' @param filenameroot the base text used for user-downloaded file - can be
 #' either a character string or a reactive expression that returns a character
@@ -128,7 +124,6 @@ downloadFileButton <- function(id,
 #' @seealso \link[periscope]{downloadFileButton}
 #' @seealso \link[periscope]{downloadFile_ValidateTypes}
 #' @seealso \link[periscope]{downloadFile_AvailableTypes}
-#' @seealso \link[shiny]{callModule}
 #'
 #' @examples 
 #' # Inside server_local.R

@@ -28,9 +28,7 @@
 #'
 #' @section Notes:
 #' When there is nothing to download in any of the linked downloadfxns the
-#' button will be hidden as there is nothing to download.  The linked
-#' downloadfxns are set in the paired callModule (see the \strong{Shiny Usage}
-#' section)
+#' button will be hidden as there is nothing to download.
 #'
 #' This module is NOT compatible with the built-in (base) graphics \emph{(such as 
 #' basic plot, etc.)} because they cannot be saved into an object and are directly 
@@ -39,7 +37,7 @@
 #' @section Shiny Usage:
 #' Call this function at the place in ui.R where the plot should be placed.
 #'
-#' Paired with a call to \code{shiny::callModule(downloadablePlot, id, ...)}
+#' Paired with a call to \code{downloadablePlot(id, ...)}
 #' in server.R
 #'
 #' @seealso \link[periscope]{downloadablePlot}
@@ -132,10 +130,7 @@ downloadablePlotUI <- function(id,
 #' Server-side function for the downloadablePlotUI.  This is a custom
 #' plot output paired with a linked downloadFile button.
 #'
-#' @param input provided by \code{shiny::callModule}
-#' @param output provided by \code{shiny::callModule}
-#' @param session provided by \code{shiny::callModule}
-#' \cr \cr
+#' @param id string represents the module id
 #' @param logger logger to use
 #' @param filenameroot the base text used for user-downloaded file - can be
 #' either a character string or a reactive expression returning a character
@@ -157,55 +152,58 @@ downloadablePlotUI <- function(id,
 #' This function is not called directly by consumers - it is accessed in
 #' server.R using the same id provided in \code{downloadablePlotUI}:
 #'
-#' \strong{\code{callModule(downloadablePlot, id, logger, filenameroot,
+#' \strong{\code{downloadablePlot(id, logger, filenameroot,
 #' downloadfxns, visibleplot)}}
 #'
 #' @seealso \link[periscope]{downloadablePlotUI}
-#' @seealso \link[shiny]{callModule}
 #'
 #' @examples 
 #' # Inside server_local.R
 #' 
-#' # callModule(downloadablePlot,
-#' #            "object_id1", 
-#' #            logger = ss_userAction.Log,
-#' #            filenameroot = "mydownload1",
-#' #            aspectratio = 1.33,
-#' #            downloadfxns = list(png = myplotfxn, tsv = mydatafxn),
-#' #            visibleplot = myplotfxn)
+#' # downloadablePlot("object_id1", 
+#' #                  logger = ss_userAction.Log,
+#' #                  filenameroot = "mydownload1",
+#' #                  aspectratio = 1.33,
+#' #                  downloadfxns = list(png = myplotfxn, tsv = mydatafxn),
+#' #                  visibleplot = myplotfxn)
 #'
 #' @export
-downloadablePlot <- function(input, output, session, logger,
+downloadablePlot <- function(id,
+                             logger,
                              filenameroot,
                              aspectratio  = 1,
                              downloadfxns = list(),
                              visibleplot) {
-    downloadFile("dplotButtonID", logger, filenameroot, downloadfxns, aspectratio)
-
-    dpInfo <- shiny::reactiveValues(visibleplot = NULL,
-                                    downloadfxns = NULL)
-
-    shiny::observe({
-        dpInfo$visibleplot <- visibleplot()
-        output$dplotOutputID <- shiny::renderPlot({
-            plot <- dpInfo$visibleplot
-            if (inherits(plot, "grob")) {
-                plot <- grid::grid.draw(plot)
-            }
-            plot
+    moduleServer(
+        id,
+        function(input, output, session) {
+            downloadFile("dplotButtonID", logger, filenameroot, downloadfxns, aspectratio)
+            
+            dpInfo <- shiny::reactiveValues(visibleplot = NULL,
+                                            downloadfxns = NULL)
+            
+            shiny::observe({
+                dpInfo$visibleplot <- visibleplot()
+                output$dplotOutputID <- shiny::renderPlot({
+                    plot <- dpInfo$visibleplot
+                    if (inherits(plot, "grob")) {
+                        plot <- grid::grid.draw(plot)
+                    }
+                    plot
+                })
+            })
+            
+            shiny::observe({
+                if (!is.null(downloadfxns) && (length(downloadfxns) > 0)) {
+                    dpInfo$downloadfxns <- lapply(downloadfxns, do.call, list())
+                    
+                    rowct <- lapply(dpInfo$downloadfxns, is.null)
+                    session$sendCustomMessage(
+                        "downloadbutton_toggle",
+                        message = list(btn  = session$ns("dplotButtonDiv"),
+                                       rows = sum(unlist(rowct) == FALSE)) )
+                }
+            })  
         })
-    })
-
-    shiny::observe({
-        if (!is.null(downloadfxns) && (length(downloadfxns) > 0)) {
-            dpInfo$downloadfxns <- lapply(downloadfxns, do.call, list())
-
-            rowct <- lapply(dpInfo$downloadfxns, is.null)
-            session$sendCustomMessage(
-                "downloadbutton_toggle",
-                message = list(btn  = session$ns("dplotButtonDiv"),
-                               rows = sum(unlist(rowct) == FALSE)) )
-        }
-    })
 
 }

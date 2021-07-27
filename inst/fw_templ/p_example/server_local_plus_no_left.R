@@ -205,27 +205,30 @@ downloadFile("exampleDownload2",
              ss_userAction.Log,
              "examplemulti",
              list(csv = load_data2, xlsx = load_data2, tsv = load_data2))
-callModule(downloadableTable, "exampleDT1",  ss_userAction.Log,
-           "exampletable",
-           list(csv = load_data3, tsv = load_data3),
-           load_data3,
-           rownames = FALSE)
+downloadableTable("exampleDT1",  
+                  ss_userAction.Log,
+                  "exampletable",
+                  list(csv = load_data3, tsv = load_data3),
+                  load_data3,
+                  rownames = FALSE)
 
-callModule(downloadablePlot, "examplePlot2", ss_userAction.Log,
-           filenameroot = "plot2_ggplot",
-           downloadfxns = list(jpeg = plot2,
-                               csv  = plot2_data),
-           aspectratio  = 1.5,
-           visibleplot  = plot2)
+downloadablePlot("examplePlot2",
+                 ss_userAction.Log,
+                 filenameroot = "plot2_ggplot",
+                 downloadfxns = list(jpeg = plot2,
+                                     csv  = plot2_data),
+                 aspectratio  = 1.5,
+                 visibleplot  = plot2)
 
-callModule(downloadablePlot, "examplePlot3", ss_userAction.Log,
-           filenameroot = "plot3_lattice",
-           aspectratio  = 2,
-           downloadfxns = list(png  = plot3,
-                               tiff = plot3,
-                               txt  = plot3_data,
-                               tsv  = plot3_data),
-           visibleplot  = plot3)
+downloadablePlot("examplePlot3", 
+                 ss_userAction.Log,
+                 filenameroot = "plot3_lattice",
+                 aspectratio  = 2,
+                 downloadfxns = list(png  = plot3,
+                                     tiff = plot3,
+                                     txt  = plot3_data,
+                                     tsv  = plot3_data),
+                 visibleplot  = plot3)
 
 # -- Observe UI Changes
 observeEvent(input$exampleBasicAlert, {

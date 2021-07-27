@@ -5,9 +5,7 @@
 \title{downloadablePlot Module}
 \usage{
 downloadablePlot(
-  input,
-  output,
-  session,
+  id,
   logger,
   filenameroot,
   aspectratio = 1,
@@ -16,12 +14,7 @@ downloadablePlot(
 )
 }
 \arguments{
-\item{input}{provided by \code{shiny::callModule}}
-
-\item{output}{provided by \code{shiny::callModule}}
-
-\item{session}{provided by \code{shiny::callModule}
-\cr \cr}
+\item{id}{string represents the module id}
 
 \item{logger}{logger to use}
 
@@ -55,24 +48,21 @@ button will be hidden as there is nothing to download.
 This function is not called directly by consumers - it is accessed in
 server.R using the same id provided in \code{downloadablePlotUI}:
 
-\strong{\code{callModule(downloadablePlot, id, logger, filenameroot,
+\strong{\code{downloadablePlot(id, logger, filenameroot,
 downloadfxns, visibleplot)}}
 }
 
 \examples{
 # Inside server_local.R
 
-# callModule(downloadablePlot,
-#            "object_id1", 
-#            logger = ss_userAction.Log,
-#            filenameroot = "mydownload1",
-#            aspectratio = 1.33,
-#            downloadfxns = list(png = myplotfxn, tsv = mydatafxn),
-#            visibleplot = myplotfxn)
+# downloadablePlot("object_id1", 
+#                  logger = ss_userAction.Log,
+#                  filenameroot = "mydownload1",
+#                  aspectratio = 1.33,
+#                  downloadfxns = list(png = myplotfxn, tsv = mydatafxn),
+#                  visibleplot = myplotfxn)
 
 }
 \seealso{
 \link[periscope]{downloadablePlotUI}
-
-\link[shiny]{callModule}
 }

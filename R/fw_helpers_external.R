@@ -5,9 +5,9 @@
 # Framework Server Setup
 fw_server_setup <- function(input, output, session, logger) {
     logfile <- shiny::isolate(.setup_logging(session, logger))
-    shiny::callModule(.bodyFooter, "footerId",   logfile)
+    .bodyFooter("footerId", logfile)
     if (shiny::isolate(.g_opts$reset_button)) {
-        shiny::callModule(.appReset, "appResetId", logger)
+        .appReset("appResetId", logger)
     }
 }
 
