@@ -16,3 +16,7 @@
       </div>
     </div>
 
+# .bodyFooter
+
+    [1] "<table  class = 'table shiny-table table- spacing-s' style = 'width:auto;'>\n<thead> <tr> <th style='text-align: left;'> action </th> <th style='text-align: left;'> time </th>  </tr> </thead> <tbody>\n  <tr> <td> line 1 </td> <td class='NA'> NA </td> </tr>\n  <tr> <td> line 2 </td> <td class='NA'> NA </td> </tr>\n  <tr> <td> line 3 </td> <td class='NA'> NA </td> </tr>\n   </tbody> </table>"
+

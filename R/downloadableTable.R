@@ -132,7 +132,7 @@ downloadableTableUI <- function(id,
 #' #                                   tabledata = mydatafxn3,
 #' #                                   rownames = FALSE,
 #' #                                   caption = "This is a great table!  By: Me",
-#' #                                  selection = mydataRowIds)
+#' #                                   selection = mydataRowIds)
 #' 
 #' # selectedrows is the reactive return value, captured for later use
 #' 
