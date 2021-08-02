@@ -168,42 +168,115 @@ downloadablePlotUI <- function(id,
 #' #                  visibleplot = myplotfxn)
 #'
 #' @export
-downloadablePlot <- function(id,
+downloadablePlot <- function(...,
                              logger,
                              filenameroot,
                              aspectratio  = 1,
                              downloadfxns = list(),
                              visibleplot) {
-    moduleServer(
-        id,
-        function(input, output, session) {
-            downloadFile("dplotButtonID", logger, filenameroot, downloadfxns, aspectratio)
-            
-            dpInfo <- shiny::reactiveValues(visibleplot = NULL,
-                                            downloadfxns = NULL)
-            
-            shiny::observe({
-                dpInfo$visibleplot <- visibleplot()
-                output$dplotOutputID <- shiny::renderPlot({
-                    plot <- dpInfo$visibleplot
-                    if (inherits(plot, "grob")) {
-                        plot <- grid::grid.draw(plot)
-                    }
-                    plot
-                })
-            })
-            
-            shiny::observe({
-                if (!is.null(downloadfxns) && (length(downloadfxns) > 0)) {
-                    dpInfo$downloadfxns <- lapply(downloadfxns, do.call, list())
-                    
-                    rowct <- lapply(dpInfo$downloadfxns, is.null)
-                    session$sendCustomMessage(
-                        "downloadbutton_toggle",
-                        message = list(btn  = session$ns("dplotButtonDiv"),
-                                       rows = sum(unlist(rowct) == FALSE)) )
-                }
-            })  
-        })
+    call <- match.call()
+    params <- list(...)
+    param_index <- 1
+    params_length <- length(params)
+    
+    # get session parameters
+    if (call[[1]] == "module") {
+        input   <- params[[param_index]]
+        param_index <- param_index + 1
+        output  <- params[[param_index]]
+        param_index <- param_index + 1
+        session <- params[[param_index]]
+        param_index <- param_index + 1
+    } else {
+        id <- params[[param_index]]
+        param_index <- param_index + 1
+    }
+    
+    # get rest of the function parameters
+    if (missing(logger) && params_length >= param_index) {
+        logger <- params[[param_index]]
+        param_index <- param_index + 1
+    }
+    
+    if (missing(filenameroot) && params_length >= param_index) {
+        filenameroot <- params[[param_index]]
+        param_index <- param_index + 1
+    }
+    
+    if (missing(aspectratio) && params_length >= param_index) {
+        aspectratio <- params[[param_index]]
+        param_index <- param_index + 1
+    }
+    
+    if (missing(downloadfxns) && params_length >= param_index) {
+        downloadfxns <- params[[param_index]]
+        param_index <- param_index + 1
+    }
+    
+    if (missing(visibleplot) && params_length >= param_index) {
+        visibleplot <- params[[param_index]]
+        param_index <- param_index + 1
+    }
+    
+    if (call[[1]] == "module") {
+        download_plot(input, 
+                      output, 
+                      session, 
+                      logger,
+                      filenameroot,
+                      aspectratio,
+                      downloadfxns,
+                      visibleplot) 
+    }
+    else {
+        moduleServer(
+            id,
+            function(input, output, session) {
+                download_plot(input, 
+                              output, 
+                              session, 
+                              logger,
+                              filenameroot,
+                              aspectratio,
+                              downloadfxns,
+                              visibleplot) 
+            })   
+    }
+}
 
+download_plot <- function(input,
+                          output, 
+                          session,
+                          logger,
+                          filenameroot,
+                          aspectratio  = 1,
+                          downloadfxns = list(),
+                          visibleplot) {
+    downloadFile("dplotButtonID", logger, filenameroot, downloadfxns, aspectratio)
+    
+    dpInfo <- shiny::reactiveValues(visibleplot = NULL,
+                                    downloadfxns = NULL)
+    
+    shiny::observe({
+        dpInfo$visibleplot <- visibleplot()
+        output$dplotOutputID <- shiny::renderPlot({
+            plot <- dpInfo$visibleplot
+            if (inherits(plot, "grob")) {
+                plot <- grid::grid.draw(plot)
+            }
+            plot
+        })
+    })
+    
+    shiny::observe({
+        if (!is.null(downloadfxns) && (length(downloadfxns) > 0)) {
+            dpInfo$downloadfxns <- lapply(downloadfxns, do.call, list())
+            
+            rowct <- lapply(dpInfo$downloadfxns, is.null)
+            session$sendCustomMessage(
+                "downloadbutton_toggle",
+                message = list(btn  = session$ns("dplotButtonDiv"),
+                               rows = sum(unlist(rowct) == FALSE)) )
+        }
+    })  
 }

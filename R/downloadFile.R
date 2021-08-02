@@ -52,7 +52,7 @@ downloadFileButton <- function(id,
                                hovertext = NULL) {
     ns <- shiny::NS(id)
     output <- ""
-
+    
     if (length(downloadtypes) > 1) {
         # create dropdown list
         dropdown <- list()
@@ -60,30 +60,30 @@ downloadFileButton <- function(id,
             dropdown <- list(dropdown,
                              shiny::tags$li(
                                  shiny::downloadLink(
-                                 ns(item),
-                                 label = item,
-                                 class = "periscope-download-choice")))
+                                     ns(item),
+                                     label = item,
+                                     class = "periscope-download-choice")))
         }
         dropdown <- shiny::tagList(dropdown)
-
+        
         # button with dropdown list
         output <- shiny::span(
-                    class = "btn-group",
-                    shinyBS::bsButton(
-                        inputId = ns("downloadFileList"),
-                        label = NULL,
-                        icon = shiny::icon("files-o", lib = "font-awesome"),
-                        type  = "action",
-                        class = "dropdown-toggle periscope-download-btn",
-                        `data-toggle` = "dropdown",
-                        `aria-haspopup` = "true",
-                        `aria-expanded` = "false"),
-                    shiny::tags$ul(class = "dropdown-menu",
-                                   id = ns("testList"),
-                                   dropdown),
-                    shinyBS::bsTooltip(id = ns("downloadFileList"),
-                                       hovertext,
-                                       placement = "top"))
+            class = "btn-group",
+            shinyBS::bsButton(
+                inputId = ns("downloadFileList"),
+                label = NULL,
+                icon = shiny::icon("files-o", lib = "font-awesome"),
+                type  = "action",
+                class = "dropdown-toggle periscope-download-btn",
+                `data-toggle` = "dropdown",
+                `aria-haspopup` = "true",
+                `aria-expanded` = "false"),
+            shiny::tags$ul(class = "dropdown-menu",
+                           id = ns("testList"),
+                           dropdown),
+            shinyBS::bsTooltip(id = ns("downloadFileList"),
+                               hovertext,
+                               placement = "top"))
     }
     else {
         # single button - no dropdown
@@ -143,185 +143,251 @@ downloadFileButton <- function(id,
 #' #              aspectratio = 1)
 #' 
 #' @export
-downloadFile <- function(id,
+downloadFile <- function(...,
                          logger,
                          filenameroot, 
                          datafxns = list(),
                          aspectratio = 1) {
-    moduleServer(
-        id,
-        function(input, output, session) {
-            rootname <- filenameroot
-            if ("character" %in% class(filenameroot)) {
-                rootname <- shiny::reactive({filenameroot})
-            }
-            
-            # --- DATA processing
-            
-            output$csv  <- shiny::downloadHandler(
-                filename = shiny::reactive({paste(rootname(), "csv", sep = ".")}),
-                content  = function(file) {
-                    writeFile("csv", datafxns$csv(), file, logger,
-                              shiny::reactive({paste(rootname(), "csv", sep = ".")}))
-                })
-            
-            output$xlsx <- shiny::downloadHandler(
-                filename = shiny::reactive({paste(rootname(), "xlsx", sep = ".")}),
-                content  = function(file) {
-                    writeFile("xlsx", datafxns$xlsx(), file, logger,
-                              shiny::reactive({paste(rootname(), "xlsx", sep = ".")}))
-                })
-            
-            output$tsv  <- shiny::downloadHandler(
-                filename = shiny::reactive({paste(rootname(), "tsv", sep = ".")}),
-                content = function(file) {
-                    writeFile("tsv", datafxns$tsv(), file, logger,
-                              shiny::reactive({paste(rootname(), "tsv", sep = ".")}))
-                })
-            
-            output$txt  <- shiny::downloadHandler(
-                filename = shiny::reactive({paste(rootname(), "txt", sep = ".")}),
-                content = function(file) {
-                    writeFile("txt", datafxns$txt(), file, logger,
-                              shiny::reactive({paste(rootname(), "txt", sep = ".")}))
-                })
-            
-            # filename is expected to be a reactive expression
-            writeFile <- function(type, data, file, logger, filename) {
-                # tabular values
-                if ((type == "csv") | (type == "tsv")) {
-                    show_rownames <- attr(data, "show_rownames")
-                    show_rownames <- !is.null(show_rownames) && show_rownames
-                    show_colnames <- TRUE
-                    if (show_rownames) {
-                        show_colnames <- NA
-                    }
-                    
-                    utils::write.table(data, file,
-                                       sep = ifelse(type == "tsv", "\t", ","),
-                                       dec = ".",
-                                       qmethod = "double",
-                                       col.names = show_colnames,
-                                       row.names = show_rownames)
-                }
-                # excel file
-                else if (type == "xlsx") {
-                    if ("openxlsx" %in% utils::installed.packages()) {
-                        if ((class(data) == "Workbook") && ("openxlsx" %in% attributes(class(data)))) {
-                            openxlsx::saveWorkbook(data, file)
-                        } else {
-                            show_rownames <- attr(data, "show_rownames")
-                            openxlsx::write.xlsx(data, file, 
-                                                 asTable   = TRUE, 
-                                                 row.names = !is.null(show_rownames) && show_rownames)
-                        }
-                    } else {
-                        writexl::write_xlsx(data, file)
-                    }
-                }
-                # text file processing
-                else if (type == "txt") {
-                    if (class(data) == "character") {
-                        writeLines(data, file)
-                    }
-                    else if (is.data.frame(data) || is.matrix(data)) {
-                        utils::write.table(data, file)
-                    }
-                    else {
-                        msg <- paste(type, "could not be processed")
-                        logwarn(msg)
-                        warning(msg)
-                    }
-                }
-                # error - type not handled
-                else {
-                    msg <- paste(type, "not implemented as a download type")
-                    logwarn(msg)
-                    warning(msg)
-                }
-                loginfo(paste("File downloaded in browser: <",
-                              filename(), ">"), logger = logger)
-            }
-            
-            # --- IMAGE processing
-            
-            output$png <- shiny::downloadHandler(
-                filename = shiny::reactive({paste(rootname(), "png", sep = ".")}),
-                content = function(file) {
-                    writeImage("png", datafxns$png(), file, aspectratio, logger,
-                               shiny::reactive({paste(rootname(), "png", sep = ".")}))
-                })
-            
-            output$jpeg <- shiny::downloadHandler(
-                filename = shiny::reactive({paste(rootname(), "jpeg", sep = ".")}),
-                content = function(file) {
-                    writeImage("jpeg", datafxns$jpeg(), file, aspectratio, logger,
-                               shiny::reactive({paste(rootname(), "jpeg", sep = ".")}))
-                })
-            
-            output$tiff <- shiny::downloadHandler(
-                filename = shiny::reactive({paste(rootname(), "tiff", sep = ".")}),
-                content = function(file) {
-                    writeImage("tiff", datafxns$tiff(), file, aspectratio, logger,
-                               shiny::reactive({paste(rootname(), "tiff", sep = ".")}))
-                })
-            
-            output$bmp <- shiny::downloadHandler(
-                filename = shiny::reactive({paste(rootname(), "bmp", sep = ".")}),
-                content = function(file) {
-                    writeImage("bmp", datafxns$bmp(), file, aspectratio, logger,
-                               shiny::reactive({paste(rootname(), "bmp", sep = ".")}))
-                })
-            
-            writeImage <- function(type, data, file, aspectratio, logger, filename) {
-                dim <- list(width = 7, height = 7/aspectratio, units = "in")
-                
-                #ggplot processing
-                if (inherits(data, c("ggplot", "ggmatrix", "grob"))) {
-                    if (type %in% c("png", "jpeg", "tiff", "bmp")) {
-                        ggplot2::ggsave(filename = file,
-                                        plot     = data,
-                                        width    = dim$width,
-                                        height   = dim$height,
-                                        units    = dim$units,
-                                        scale    = 2)
-                    }
-                    else {
-                        msg <- paste("Unsupported plot type for ggplot download - ",
-                                     "must be in: <png, jpeg, tiff, bmp>")
-                        logwarn(msg)
-                        warning(msg)
-                    }
-                }
-                #lattice processing
-                else if (inherits(data, "trellis")) {
-                    if (type %in% c("png", "jpeg", "tiff", "bmp")) {
-                        do.call(type, list(filename = file,
-                                           width    = dim$width,
-                                           height   = dim$height,
-                                           units    = dim$units,
-                                           res      = 600))
-                        print(data)
-                        grDevices::dev.off()
-                    }
-                    else {
-                        msg <- paste("Unsupported plot type for lattice download - ",
-                                     "must be in: <png, jpeg, tiff, bmp>")
-                        logwarn(msg)
-                        warning(msg)
-                    }
-                }
-                # error - type not handled
-                # ------- should really never be hit
-                else {
-                    msg <- paste(type, "not implemented as a download type")
-                    logwarn(msg)
-                    warning(msg)
-                }
-                loginfo(paste("File downloaded in browser: <",
-                              filename(), ">"), logger = logger)
-            }
+    call <- match.call()
+    params <- list(...)
+    param_index <- 1
+    params_length <- length(params)
+    
+    # get session parameters
+    if (call[[1]] == "module") {
+        input   <- params[[param_index]]
+        param_index <- param_index + 1
+        output  <- params[[param_index]]
+        param_index <- param_index + 1
+        session <- params[[param_index]]
+        param_index <- param_index + 1
+    } else {
+        id <- params[[param_index]]
+        param_index <- param_index + 1
+    }
+    
+    # get rest of the function parameters
+    if (missing(logger) && params_length >= param_index) {
+        logger <- params[[param_index]]
+        param_index <- param_index + 1
+    }
+    
+    if (missing(filenameroot) && params_length >= param_index) {
+        filenameroot <- params[[param_index]]
+        param_index <- param_index + 1
+    }
+    
+    if (missing(datafxns) && params_length >= param_index) {
+        datafxns <- params[[param_index]]
+        param_index <- param_index + 1
+    }
+    
+    if (missing(aspectratio) && params_length >= param_index) {
+        aspectratio <- params[[param_index]]
+        param_index <- param_index + 1
+    }
+    
+    if (call[[1]] == "module") {
+        download_file(input, 
+                      output, 
+                      session,
+                      logger,
+                      filenameroot, 
+                      datafxns,
+                      aspectratio)
+    } 
+    else {
+        moduleServer(
+            id,
+            function(input, output, session) {
+                download_file(input, 
+                              output, 
+                              session,
+                              logger,
+                              filenameroot, 
+                              datafxns,
+                              aspectratio)
+            })   
+    }
+}
+
+download_file <- function(input, 
+                          output, 
+                          session,
+                          logger,
+                          filenameroot, 
+                          datafxns = list(),
+                          aspectratio = 1) {
+    rootname <- filenameroot
+    if ("character" %in% class(filenameroot)) {
+        rootname <- shiny::reactive({filenameroot})
+    }
+    
+    # --- DATA processing
+    
+    output$csv  <- shiny::downloadHandler(
+        filename = shiny::reactive({paste(rootname(), "csv", sep = ".")}),
+        content  = function(file) {
+            writeFile("csv", datafxns$csv(), file, logger,
+                      shiny::reactive({paste(rootname(), "csv", sep = ".")}))
         })
+    
+    output$xlsx <- shiny::downloadHandler(
+        filename = shiny::reactive({paste(rootname(), "xlsx", sep = ".")}),
+        content  = function(file) {
+            writeFile("xlsx", datafxns$xlsx(), file, logger,
+                      shiny::reactive({paste(rootname(), "xlsx", sep = ".")}))
+        })
+    
+    output$tsv  <- shiny::downloadHandler(
+        filename = shiny::reactive({paste(rootname(), "tsv", sep = ".")}),
+        content = function(file) {
+            writeFile("tsv", datafxns$tsv(), file, logger,
+                      shiny::reactive({paste(rootname(), "tsv", sep = ".")}))
+        })
+    
+    output$txt  <- shiny::downloadHandler(
+        filename = shiny::reactive({paste(rootname(), "txt", sep = ".")}),
+        content = function(file) {
+            writeFile("txt", datafxns$txt(), file, logger,
+                      shiny::reactive({paste(rootname(), "txt", sep = ".")}))
+        })
+    
+    # filename is expected to be a reactive expression
+    writeFile <- function(type, data, file, logger, filename) {
+        # tabular values
+        if ((type == "csv") | (type == "tsv")) {
+            show_rownames <- attr(data, "show_rownames")
+            show_rownames <- !is.null(show_rownames) && show_rownames
+            show_colnames <- TRUE
+            if (show_rownames) {
+                show_colnames <- NA
+            }
+            
+            utils::write.table(data, file,
+                               sep = ifelse(type == "tsv", "\t", ","),
+                               dec = ".",
+                               qmethod = "double",
+                               col.names = show_colnames,
+                               row.names = show_rownames)
+        }
+        # excel file
+        else if (type == "xlsx") {
+            if ("openxlsx" %in% utils::installed.packages()) {
+                if ((class(data) == "Workbook") && ("openxlsx" %in% attributes(class(data)))) {
+                    openxlsx::saveWorkbook(data, file)
+                } else {
+                    show_rownames <- attr(data, "show_rownames")
+                    openxlsx::write.xlsx(data, file, 
+                                         asTable   = TRUE, 
+                                         row.names = !is.null(show_rownames) && show_rownames)
+                }
+            } else {
+                writexl::write_xlsx(data, file)
+            }
+        }
+        # text file processing
+        else if (type == "txt") {
+            if (class(data) == "character") {
+                writeLines(data, file)
+            }
+            else if (is.data.frame(data) || is.matrix(data)) {
+                utils::write.table(data, file)
+            }
+            else {
+                msg <- paste(type, "could not be processed")
+                logwarn(msg)
+                warning(msg)
+            }
+        }
+        # error - type not handled
+        else {
+            msg <- paste(type, "not implemented as a download type")
+            logwarn(msg)
+            warning(msg)
+        }
+        loginfo(paste("File downloaded in browser: <",
+                      filename(), ">"), logger = logger)
+    }
+    
+    # --- IMAGE processing
+    
+    output$png <- shiny::downloadHandler(
+        filename = shiny::reactive({paste(rootname(), "png", sep = ".")}),
+        content = function(file) {
+            writeImage("png", datafxns$png(), file, aspectratio, logger,
+                       shiny::reactive({paste(rootname(), "png", sep = ".")}))
+        })
+    
+    output$jpeg <- shiny::downloadHandler(
+        filename = shiny::reactive({paste(rootname(), "jpeg", sep = ".")}),
+        content = function(file) {
+            writeImage("jpeg", datafxns$jpeg(), file, aspectratio, logger,
+                       shiny::reactive({paste(rootname(), "jpeg", sep = ".")}))
+        })
+    
+    output$tiff <- shiny::downloadHandler(
+        filename = shiny::reactive({paste(rootname(), "tiff", sep = ".")}),
+        content = function(file) {
+            writeImage("tiff", datafxns$tiff(), file, aspectratio, logger,
+                       shiny::reactive({paste(rootname(), "tiff", sep = ".")}))
+        })
+    
+    output$bmp <- shiny::downloadHandler(
+        filename = shiny::reactive({paste(rootname(), "bmp", sep = ".")}),
+        content = function(file) {
+            writeImage("bmp", datafxns$bmp(), file, aspectratio, logger,
+                       shiny::reactive({paste(rootname(), "bmp", sep = ".")}))
+        })
+    
+    writeImage <- function(type, data, file, aspectratio, logger, filename) {
+        dim <- list(width = 7, height = 7/aspectratio, units = "in")
+        
+        #ggplot processing
+        if (inherits(data, c("ggplot", "ggmatrix", "grob"))) {
+            if (type %in% c("png", "jpeg", "tiff", "bmp")) {
+                ggplot2::ggsave(filename = file,
+                                plot     = data,
+                                width    = dim$width,
+                                height   = dim$height,
+                                units    = dim$units,
+                                scale    = 2)
+            }
+            else {
+                msg <- paste("Unsupported plot type for ggplot download - ",
+                             "must be in: <png, jpeg, tiff, bmp>")
+                logwarn(msg)
+                warning(msg)
+            }
+        }
+        #lattice processing
+        else if (inherits(data, "trellis")) {
+            if (type %in% c("png", "jpeg", "tiff", "bmp")) {
+                do.call(type, list(filename = file,
+                                   width    = dim$width,
+                                   height   = dim$height,
+                                   units    = dim$units,
+                                   res      = 600))
+                print(data)
+                grDevices::dev.off()
+            }
+            else {
+                msg <- paste("Unsupported plot type for lattice download - ",
+                             "must be in: <png, jpeg, tiff, bmp>")
+                logwarn(msg)
+                warning(msg)
+            }
+        }
+        # error - type not handled
+        # ------- should really never be hit
+        else {
+            msg <- paste(type, "not implemented as a download type")
+            logwarn(msg)
+            warning(msg)
+        }
+        loginfo(paste("File downloaded in browser: <",
+                      filename(), ">"), logger = logger)
+    }
 }
 
 
@@ -345,7 +411,7 @@ downloadFile_ValidateTypes <- function(types) {
         if ( !(type %in% shiny::isolate(.g_opts$data_download_types)) &&
              !(type %in% shiny::isolate(.g_opts$plot_download_types)) ) {
             warning(paste0("file download list contains an invalid type <",
-                        type, ">"))
+                           type, ">"))
         }
     }
     types
