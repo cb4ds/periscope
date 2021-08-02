@@ -149,9 +149,10 @@ downloadableTable <- function(...,
     params <- list(...)
     param_index <- 1
     params_length <- length(params)
+    old_style_call <- call[[1]] == "module" || call[[1]] == "periscope::downloadFile"
     
     # get session parameters
-    if (call[[1]] == "module") {
+    if (old_style_call) {
         input   <- params[[param_index]]
         param_index <- param_index + 1
         output  <- params[[param_index]]
@@ -199,7 +200,7 @@ downloadableTable <- function(...,
         param_index <- param_index + 1
     }
     
-    if (call[[1]] == "module") {
+    if (old_style_call) {
         download_table(input, output, session, 
                        logger,
                        filenameroot, 
