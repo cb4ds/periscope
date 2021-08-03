@@ -5,47 +5,104 @@ test_that(".appResetButton", {
     expect_snapshot_output(.appResetButton("myid"))
 })
 
-test_that(".appReset - no reset button", {
-    testServer(.appReset,
-               args = list(logger = periscope:::fw_get_user_log()),
+test_that("app_reset - no reset button", {
+    testServer(app_reset,
                expr = {
-                   session$setInputs(resetPending = NULL)
-                   suppressWarnings(expect_equal(class(session$getReturned()), c("Observer", "R6")))
-               })
-})
-    
-test_that(".appReset - reset button - no pending", {
-    testServer(.appReset,
-               args = list(logger = periscope:::fw_get_user_log()),
-               expr = {
-                   session$setInputs(resetPending = TRUE, resetButton = FALSE)
-                   suppressWarnings(expect_equal(class(session$getReturned()), c("Observer", "R6")))
+                   session$setInputs(resetPending = NULL, logger = periscope:::fw_get_user_log())
+                   expect_null(session$getReturned())
                })
 })
 
-test_that(".appReset - no reset button - with pending", {
-    testServer(.appReset,
-               args = list(logger = periscope:::fw_get_user_log()),
+test_that("app_reset - reset button - no pending", {
+    testServer(app_reset,
                expr = {
-                   session$setInputs(resetPending = FALSE, resetButton = TRUE)
-                   suppressWarnings(expect_equal(class(session$getReturned()), c("Observer", "R6")))
+                   suppressWarnings({
+                       session$setInputs(resetButton = TRUE, 
+                                         resetPending = FALSE, 
+                                         logger = periscope:::fw_get_user_log())
+                       
+                       expect_null(session$getReturned())
+                       expect_silent(app_reset(input = list(resetButton = TRUE, resetPending = FALSE),
+                                               output = list(),
+                                               session = MockShinySession$setInputs(resetButton = TRUE,
+                                                                                    resetPending = FALSE),
+                                               logger = periscope:::fw_get_user_log()))  
+                       })
                })
 })
-    
-test_that(".appReset - reset button - with pending", {
-    testServer(.appReset,
-               args = list(logger = periscope:::fw_get_user_log()),
+
+test_that("app_reset - no reset button - with pending", {
+    testServer(app_reset,
                expr = {
-                   session$setInputs(resetPending = TRUE, resetButton = TRUE)
-                   suppressWarnings(expect_equal(class(session$getReturned()), c("Observer", "R6")))
+                   suppressWarnings({
+                       session$setInputs(resetButton = FALSE, 
+                                         resetPending = TRUE, 
+                                         logger = periscope:::fw_get_user_log())
+                       expect_null(session$getReturned())
+                       expect_silent(app_reset(input = list(resetButton = FALSE, resetPending = TRUE),
+                                               output = list(),
+                                               session = MockShinySession$setInputs(resetButton = TRUE,
+                                                                                    resetPending = FALSE),
+                                               logger = periscope:::fw_get_user_log()))  
+                   })
                })
 })
-    
+
+test_that("app_reset - reset button - with pending", {
+    testServer(app_reset,
+               expr = {
+                   suppressWarnings({
+                       session$setInputs(resetButton = TRUE, 
+                                         resetPending = TRUE, 
+                                         logger = periscope:::fw_get_user_log())
+                       expect_null(session$getReturned())
+                       expect_silent(app_reset(input = list(resetButton = TRUE, resetPending = TRUE),
+                                               output = list(),
+                                               session = MockShinySession$setInputs(resetButton = TRUE,
+                                                                                    resetPending = FALSE),
+                                           logger = periscope:::fw_get_user_log()))
+                   })
+               })
+})
+
+test_that("app_reset", {
+    testServer(app_reset,
+               expr = {
+                   suppressWarnings({
+                       session$setInputs(resetButton = FALSE, 
+                                         resetPending = FALSE, 
+                                         logger = periscope:::fw_get_user_log())
+                       expect_null(session$getReturned())
+                       expect_silent(app_reset(input = list(resetButton = FALSE, resetPending = FALSE),
+                                               output = list(),
+                                               session = MockShinySession$setInputs(resetButton = TRUE,
+                                                                                    resetPending = FALSE),
+                                               logger = periscope:::fw_get_user_log()))
+                   })
+               })
+})
+
 test_that(".appReset", {
-    testServer(.appReset,
-               args = list(logger = periscope:::fw_get_user_log()),
+    reset <- shiny::callModule(.appReset, 
+                               "reset", 
+                               input = list(),
+                               output = list(), 
+                               session = MockShinySession$new(),
+                               logger = periscope:::fw_get_user_log())
+    expect_equal(class(reset)[[1]], "Observer")
+    expect_equal(class(reset)[[2]], "R6")
+})
+
+test_that("app_reset_old_style_call", {
+    testServer(app_reset,
                expr = {
-                   session$setInputs(resetPending = FALSE, resetButton = FALSE)
-                   suppressWarnings(expect_equal(class(session$getReturned()), c("Observer", "R6")))
+                   suppressWarnings({
+                       reset <- shiny::callModule(app_reset, 
+                                                  "reset", 
+                                                  logger = periscope:::fw_get_user_log())
+                       expect_equal(class(reset)[[1]], "Observer")
+                       expect_equal(class(reset)[[2]], "R6")  
+                   })
                })
 })
+

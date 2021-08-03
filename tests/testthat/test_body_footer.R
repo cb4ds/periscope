@@ -1,19 +1,47 @@
 context("periscope - Body footer")
+# Helper functions
+data <- function(){
+    c("line 1", "line 2", "line 3")
+}
 
+data2 <- function(){
+    NULL
+}
+
+# UI unit tests
 test_that(".bodyFooterOutput", {
     local_edition(3)
     expect_snapshot_output(.bodyFooterOutput("myid"))
 })
 
+
+# Server unit tests
 test_that(".bodyFooter", {
-    local_edition(3)
-    # Helper functions
-    data <- function(){
-        c("line 1", "line 2", "line 3")
-    }
-    testServer(.bodyFooter,
-               args = list(logdata = data),
+    footer <- shiny::callModule(.bodyFooter, "footer", input = list(),
+                                output = list(), 
+                                session = MockShinySession$new(),
+                                logdata = data)
+    expect_equal(class(footer)[[1]], "shiny.render.function")
+})
+
+test_that("boody_footer", {
+    testServer(boody_footer, 
                expr = {
-                   expect_snapshot_output(output$dt_userlog)
+                   session$setInputs(logdata = data)
+                   expect_silent(boody_footer)
+                })
+    
+    testServer(boody_footer, 
+               expr = {
+                   session$setInputs(logdata = data2)
+                   expect_silent(boody_footer)
+               })
+})
+
+test_that("boody_footer2", {
+    testServer(boody_footer, 
+               expr = {
+                   session$setInputs(logdata = data2)
+                   expect_silent(boody_footer)
                })
 })

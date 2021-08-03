@@ -84,18 +84,18 @@ test_that("downloadablePlot", {
     download_data <- function() {
         mtcars
     }
-    testServer(downloadablePlot, 
-               args = list(logger = periscope:::fw_get_user_log(),
-                           filenameroot = "mydownload1",
-                           aspectratio  = 2,
-                           downloadfxns = list(png  = download_plot,
-                                               tiff = download_plot,
-                                               txt  = download_data,
-                                               tsv  = download_data),
-                           visibleplot = download_plot),
-               expr = {
-                   expect_equal(dpInfo$visibleplot, NULL)
-                   expect_equal(dpInfo$dplotOutputID, NULL)
-                   expect_equal(dpInfo$downloadfxns, NULL)
-               })
+    
+    expect_silent(shiny::callModule(downloadablePlot,
+                                   "download",
+                                   input = list(),
+                                   output = list(), 
+                                   session = MockShinySession$new(),
+                                   logger = periscope:::fw_get_user_log(),
+                                   filenameroot = "mydownload1",
+                                   aspectratio  = 2,
+                                   downloadfxns = list(png  = download_plot,
+                                                       tiff = download_plot,
+                                                       txt  = download_data,
+                                                       tsv  = download_data),
+                                   visibleplot = download_plot))
 })
