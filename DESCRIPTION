@@ -20,7 +20,7 @@ Language: en-US
 Depends:
     R (>= 3.5)
 Imports:
-    shiny (>= 1.1),
+    shiny (>= 1.5),
     shinydashboard (>= 0.5),
     shinyBS (>= 0.61),
     lubridate (>= 1.6),

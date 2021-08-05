@@ -5,7 +5,7 @@
 \title{downloadableTable Module}
 \usage{
 downloadableTable(
-  id,
+  ...,
   logger,
   filenameroot,
   downloaddatafxns = list(),
@@ -16,8 +16,6 @@ downloadableTable(
 )
 }
 \arguments{
-\item{id}{string represents the module id}
-
 \item{logger}{logger to use}
 
 \item{filenameroot}{the base text used for user-downloaded file - can be
@@ -37,6 +35,8 @@ data as a return value. This function should require no input parameters.}
 
 \item{selection}{function or reactive expression providing the row_ids of the
 rows that should be selected.}
+
+\item{id}{string represents the module id}
 }
 \value{
 Reactive expression containing the currently selected rows in the
@@ -75,7 +75,7 @@ currently selected rows in the display table.
 #                                   tabledata = mydatafxn3,
 #                                   rownames = FALSE,
 #                                   caption = "This is a great table!  By: Me",
-#                                  selection = mydataRowIds)
+#                                   selection = mydataRowIds)
 
 # selectedrows is the reactive return value, captured for later use
 

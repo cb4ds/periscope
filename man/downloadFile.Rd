@@ -4,11 +4,9 @@
 \alias{downloadFile}
 \title{downloadFile Module}
 \usage{
-downloadFile(id, logger, filenameroot, datafxns = list(), aspectratio = 1)
+downloadFile(..., logger, filenameroot, datafxns = list(), aspectratio = 1)
 }
 \arguments{
-\item{id}{string represents the module id}
-
 \item{logger}{logger to use}
 
 \item{filenameroot}{the base text used for user-downloaded file - can be
@@ -22,6 +20,8 @@ when the button UI was created.}
 \item{aspectratio}{the downloaded chart image width:height ratio (ex:
 1 = square, 1.3 = 4:3, 0.5 = 1:2). Where not applicable for a download type
 it is ignored (e.g. data downloads).}
+
+\item{id}{string represents the module id}
 }
 \description{
 Server-side function for the downloadFileButton.  This is a custom
