@@ -149,7 +149,7 @@ downloadableTable <- function(...,
     params <- list(...)
     param_index <- 1
     params_length <- length(params)
-    old_style_call <- call[[1]] == "module" || startsWith(call[[1]], "periscope::")
+    old_style_call <- call[[1]] == "module" || startsWith(as.character(call[[1]]), "periscope::")
     
     # get session parameters
     if (old_style_call) {
