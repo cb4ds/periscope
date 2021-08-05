@@ -141,10 +141,7 @@ downloadableTable <- function(...,
                               logger,
                               filenameroot, 
                               downloaddatafxns = list(),
-                              tabledata, 
-                              rownames = TRUE,
-                              caption = NULL, 
-                              selection = NULL) {
+                              tabledata) {
     call <- match.call()
     params <- list(...)
     param_index <- 1
@@ -185,30 +182,13 @@ downloadableTable <- function(...,
         param_index <- param_index + 1
     }
     
-    if (missing(rownames) && params_length >= param_index) {
-        rownames <- params[[param_index]]
-        param_index <- param_index + 1
-    }
-    
-    if (missing(caption) && params_length >= param_index) {
-        caption <- params[[param_index]]
-        param_index <- param_index + 1
-    }
-    
-    if (missing(selection) && params_length >= param_index) {
-        selection <- params[[param_index]]
-        param_index <- param_index + 1
-    }
-    
     if (old_style_call) {
         download_table(input, output, session, 
                        logger,
                        filenameroot, 
                        downloaddatafxns,
                        tabledata, 
-                       rownames,
-                       caption, 
-                       selection)
+                       params[param_index:params_length])
     }
     else {
         moduleServer(id = params[[1]], 
@@ -218,9 +198,7 @@ downloadableTable <- function(...,
                                         filenameroot, 
                                         downloaddatafxns,
                                         tabledata, 
-                                        rownames,
-                                        caption, 
-                                        selection)
+                                        params[param_index:params_length])
                      })
     }
 }
@@ -230,9 +208,9 @@ download_table <- function(input, output, session,
                            filenameroot, 
                            downloaddatafxns = list(),
                            tabledata, 
-                           rownames = TRUE,
-                           caption = NULL, 
-                           selection = NULL) {
+                           table_options) {
+    selection <- table_options[["selection"]]
+    
     downloadFile("dtableButtonID", logger, filenameroot, downloaddatafxns)
     
     session$sendCustomMessage("downloadbutton_toggle",
@@ -276,6 +254,9 @@ download_table <- function(input, output, session,
     
     output$dtableOutputID <- DT::renderDataTable({
         sourcedata <- dtInfo$tabledata
+        if (!is.null(table_options[["colnames"]])) {
+            names(sourcedata) <- table_options[["colnames"]]
+        }
         
         if (!is.null(sourcedata) && nrow(sourcedata) > 0) {
             row.names <- rownames(sourcedata)
@@ -289,30 +270,89 @@ download_table <- function(input, output, session,
                 colnames(sourcedata) <- c(" ", col.names)
             }
         }
-        DT::datatable(data = sourcedata,
-                      options = list(
-                          deferRender     = FALSE,
-                          scrollY         = input$dtableOutputHeight,
-                          paging          = FALSE,
-                          scrollX         = TRUE,
-                          dom             = '<"periscope-downloadable-table-header"f>tr',
-                          processing      = TRUE,
-                          rowId           = 1,
-                          columnDefs      = list(list(targets = 0,
-                                                      visible = FALSE,
-                                                      searchable = FALSE)),
-                          searchHighlight = TRUE ),
-                      class = paste("periscope-downloadable-table table-condensed",
-                                    "table-striped table-responsive"),
-                      rownames = rownames,
-                      selection = dtInfo$selection,
-                      caption = caption,
-                      escape = FALSE,
-                      style = "bootstrap")
+        
+        table_options[["scrollY"]] <- input$dtableOutputHeight
+        # get format functions
+        format_options_idx <- which(startsWith(names(table_options), "format"))
+        format_options <- table_options[format_options_idx]
+        dt_args <- build_datatable_arguments(table_options[-format_options_idx])
+        dt_args[["data"]] <- sourcedata
+        dt <- do.call(DT::datatable, dt_args)
+        format_columns(dt, format_options)
     })
     
     
     shiny::reactive({
         return(shiny::isolate(dtInfo$tabledata)[dtInfo$selected, ])
     })  
+}
+
+build_datatable_arguments <- function(table_options) {
+    dt_args <- list()
+    formal_dt_args <- formalArgs(DT::datatable)
+    dt_args[["rownames"]] <- TRUE
+    dt_args[["class"]] <- paste("periscope-downloadable-table table-condensed",
+                               "table-striped table-responsive")
+    options <- list()
+    for (option in names(table_options)) {
+        if (option %in% formal_dt_args) {
+            dt_args[[option]] <- table_options[[option]]
+        } else{
+            options[[option]] <- table_options[[option]]
+        }
+    }
+    
+    if (is.null(options[["deferRender"]])) {
+        options[["deferRender"]] <- FALSE
+    }
+    
+    if (is.null(options[["columnDefs"]])) {
+        options[["columnDefs"]] <- list(list(targets = 0,
+                                             visible = FALSE,
+                                             searchable = FALSE))
+    }
+    
+    if (is.null(options[["paging"]])) {
+        options[["paging"]] <- FALSE
+    }
+    
+    if (is.null(options[["scrollX"]])) {
+        options[["scrollX"]] <- TRUE
+    }
+    
+    if (is.null(options[["dom"]])) {
+        options[["dom"]] <- '<"periscope-downloadable-table-header"f>tr'
+    }
+    
+    if (is.null(options[["processing"]])) {
+        options[["processing"]] <- TRUE
+    }
+    
+    if (is.null(options[["rowId"]])) {
+        options[["rowId"]] <- 1
+    }
+    
+    if (is.null(options[["searchHighlight"]])) {
+        options[["searchHighlight"]] <- TRUE
+    }
+    dt_args[["callback"]] <- htmlwidgets::JS(dt_args[["callback"]])
+    dt_args[["options"]] <- options
+    dt_args
+}
+
+format_columns <- function(dt, format_options) {
+    for (format_idx in 1:length(format_options)) {
+        format_args <- format_options[[format_idx]]
+        format_args[["table"]] <- dt
+        format <- tolower(names(format_options)[format_idx])
+        dt <- switch(format,
+                     "formatstyle" = do.call(DT::formatStyle, format_args),
+                     "formatdate" = do.call(DT::formatDate, format_args),
+                     "formatsignif" = do.call(DT::formatSignif, format_args),
+                     "formatround" = do.call(DT::formatRound, format_args),
+                     "formatpercentage" = do.call(DT::formatPercentage, format_args),
+                     "formatstring" = do.call(DT::formatstring, format_args),
+                     "formatcurrency" = do.call(DT::formatPercentage, format_args))
+    }
+    dt
 }

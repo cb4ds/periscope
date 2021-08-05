@@ -5,7 +5,7 @@
 \title{downloadablePlot Module}
 \usage{
 downloadablePlot(
-  id,
+  ...,
   logger,
   filenameroot,
   aspectratio = 1,
@@ -14,8 +14,6 @@ downloadablePlot(
 )
 }
 \arguments{
-\item{id}{string represents the module id}
-
 \item{logger}{logger to use}
 
 \item{filenameroot}{the base text used for user-downloaded file - can be
@@ -32,6 +30,8 @@ the same names that were used when the plot UI was created.}
 
 \item{visibleplot}{function or reactive expression providing the plot to
 display as a return value.  This function should require no input parameters.}
+
+\item{id}{string represents the module id}
 }
 \description{
 Server-side function for the downloadablePlotUI.  This is a custom
