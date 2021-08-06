@@ -179,7 +179,7 @@ downloadablePlot <- function(...,
     param_index <- 1
     params_length <- length(params)
     
-    old_style_call <- call[[1]] == "module" || startsWith(as.character(call[[1]]), "periscope::")
+    old_style_call <- call[[1]] == "module" || "periscope" %in% as.character(call[[1]])
     
     # get session parameters
     if (old_style_call) {
