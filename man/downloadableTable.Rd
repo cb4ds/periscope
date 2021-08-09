@@ -34,6 +34,8 @@ data as a return value. This function should require no input parameters.}
 
 \item{selection}{function or reactive expression providing the row_ids of the
 rows that should be selected.}
+
+\item{id}{string represents the module id}
 }
 \value{
 Reactive expression containing the currently selected rows in the
