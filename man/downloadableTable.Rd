@@ -13,6 +13,9 @@ downloadableTable(
 )
 }
 \arguments{
+\item{...}{free parameters list to pass table customization options. See example below.
+\emph{Note}: first argument always must be 'id' string represents the module id}
+
 \item{logger}{logger to use}
 
 \item{filenameroot}{the base text used for user-downloaded file - can be
@@ -26,16 +29,10 @@ when the table UI was created.}
 \item{tabledata}{function or reactive expression providing the table display
 data as a return value. This function should require no input parameters.}
 
-\item{id}{string represents the module id}
-
 \item{rownames}{whether or not to show the rownames in the table}
-
-\item{caption}{table caption}
 
 \item{selection}{function or reactive expression providing the row_ids of the
 rows that should be selected.}
-
-\item{id}{string represents the module id}
 }
 \value{
 Reactive expression containing the currently selected rows in the
@@ -45,6 +42,19 @@ display table
 Server-side function for the downloadableTableUI.  This is a custom
 high-functionality table paired with a linked downloadFile
 button.
+}
+\details{
+Generated table can highly customized using function \code{?DT::datatable} same arguments
+ except for `options` and `selection` parameters. 
+ 
+For `options` user can pass the same \code{?DT::datatable} options using the same names and 
+values one by one separated by comma.
+ 
+For `selection` parameter it can be either a function or reactive expression providing the row_ids of the
+rows that should be selected.
+
+Also, user can apply the same provided \code{?DT::formatCurrency} columns formats on passed
+dataset using format functions names as keys and their options as a list.
 }
 \section{Notes}{
 
@@ -67,14 +77,27 @@ currently selected rows in the display table.
 \examples{
 # Inside server_local.R
 
-# selectedrows <- downloadableTable("object_id1", 
-#                                   logger = ss_userAction.Log,
-#                                   filenameroot = "mydownload1",
-#                                   downloaddatafxns = list(csv = mydatafxn1, tsv = mydatafxn2),
-#                                   tabledata = mydatafxn3,
-#                                   rownames = FALSE,
-#                                   caption = "This is a great table!  By: Me",
-#                                   selection = mydataRowIds)
+# selectedrows <- downloadableTable(
+#     "object_id1", 
+#     logger = ss_userAction.Log,
+#     filenameroot = "mydownload1",
+#     downloaddatafxns = list(csv = mydatafxn1, tsv = mydatafxn2),
+#     tabledata = mydatafxn3,
+#     rownames = FALSE,
+#     caption = "This is a great table!  By: Me",
+#     selection = mydataRowIds,
+#     colnames = c("Area", "Delta", "Increase"),
+#     filter = "bottom",
+#     width = "150px",
+#     height = "50px",
+#     extensions = 'Buttons',
+#     plugins = 'natural',
+#     editable = TRUE, 
+#     dom = 'Bfrtip', 
+#     buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+#     formatStyle = list(columns = c('Area'),  color = 'red'),
+#     formatStyle = list(columns = c('Increase'), color = DT::styleInterval(0, c('red', 'green'))), 
+#     formatCurrency = list(columns = c('Delta')))
 
 # selectedrows is the reactive return value, captured for later use
 

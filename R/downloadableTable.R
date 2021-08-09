@@ -87,8 +87,22 @@ downloadableTableUI <- function(id,
 #' Server-side function for the downloadableTableUI.  This is a custom
 #' high-functionality table paired with a linked downloadFile
 #' button.
+#' 
+#' Generated table can highly customized using function \code{?DT::datatable} same arguments
+#'  except for `options` and `selection` parameters. 
+#'  
+#' For `options` user can pass the same \code{?DT::datatable} options using the same names and 
+#' values one by one separated by comma.
+#'  
+#' For `selection` parameter it can be either a function or reactive expression providing the row_ids of the
+#' rows that should be selected.
+#' 
+#' Also, user can apply the same provided \code{?DT::formatCurrency} columns formats on passed
+#' dataset using format functions names as keys and their options as a list.
+#'  
 #'
-#' @param id string represents the module id
+#' @param ... free parameters list to pass table customization options. See example below.
+#'            \emph{Note}: first argument always must be 'id' string represents the module id
 #' @param logger logger to use
 #' @param filenameroot the base text used for user-downloaded file - can be
 #' either a character string or a reactive expression returning a character
@@ -99,7 +113,6 @@ downloadableTableUI <- function(id,
 #' @param tabledata function or reactive expression providing the table display
 #' data as a return value. This function should require no input parameters.
 #' @param rownames whether or not to show the rownames in the table
-#' @param caption table caption
 #' @param selection function or reactive expression providing the row_ids of the
 #' rows that should be selected.
 #'
@@ -125,14 +138,27 @@ downloadableTableUI <- function(id,
 #' @examples 
 #' # Inside server_local.R
 #' 
-#' # selectedrows <- downloadableTable("object_id1", 
-#' #                                   logger = ss_userAction.Log,
-#' #                                   filenameroot = "mydownload1",
-#' #                                   downloaddatafxns = list(csv = mydatafxn1, tsv = mydatafxn2),
-#' #                                   tabledata = mydatafxn3,
-#' #                                   rownames = FALSE,
-#' #                                   caption = "This is a great table!  By: Me",
-#' #                                   selection = mydataRowIds)
+#' # selectedrows <- downloadableTable(
+#' #     "object_id1", 
+#' #     logger = ss_userAction.Log,
+#' #     filenameroot = "mydownload1",
+#' #     downloaddatafxns = list(csv = mydatafxn1, tsv = mydatafxn2),
+#' #     tabledata = mydatafxn3,
+#' #     rownames = FALSE,
+#' #     caption = "This is a great table!  By: Me",
+#' #     selection = mydataRowIds,
+#' #     colnames = c("Area", "Delta", "Increase"),
+#' #     filter = "bottom",
+#' #     width = "150px",
+#' #     height = "50px",
+#' #     extensions = 'Buttons',
+#' #     plugins = 'natural',
+#' #     editable = TRUE, 
+#' #     dom = 'Bfrtip', 
+#' #     buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+#' #     formatStyle = list(columns = c('Area'),  color = 'red'),
+#' #     formatStyle = list(columns = c('Increase'), color = DT::styleInterval(0, c('red', 'green'))), 
+#' #     formatCurrency = list(columns = c('Delta')))
 #' 
 #' # selectedrows is the reactive return value, captured for later use
 #' 
@@ -156,7 +182,8 @@ downloadableTable <- function(...,
         param_index <- param_index + 1
         session <- params[[param_index]]
         param_index <- param_index + 1
-    } else {
+    } 
+    else {
         id <- params[[param_index]]
         param_index <- param_index + 1
     }
@@ -278,7 +305,10 @@ download_table <- function(input, output, session,
         dt_args <- build_datatable_arguments(table_options[-format_options_idx])
         dt_args[["data"]] <- sourcedata
         dt <- do.call(DT::datatable, dt_args)
-        format_columns(dt, format_options)
+        if (length(format_options) > 0) {
+            dt <- format_columns(dt, format_options)
+        }
+        dt
     })
     
     
