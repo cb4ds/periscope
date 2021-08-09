@@ -302,7 +302,12 @@ download_table <- function(input, output, session,
         # get format functions
         format_options_idx <- which(startsWith(names(table_options), "format"))
         format_options <- table_options[format_options_idx]
-        dt_args <- build_datatable_arguments(table_options[-format_options_idx])
+        if (length(format_options_idx) > 0) {
+            dt_args <- build_datatable_arguments(table_options[-format_options_idx])
+        } else {
+            dt_args <- build_datatable_arguments(table_options)
+        }
+        
         dt_args[["data"]] <- sourcedata
         dt <- do.call(DT::datatable, dt_args)
         if (length(format_options) > 0) {
