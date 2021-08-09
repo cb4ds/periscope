@@ -288,6 +288,11 @@ download_table <- function(input, output, session,
 }
 
 build_datatable_arguments <- function(table_options) {
+    if (!is.null(table_options[["editable"]]) && table_options[["editable"]]) {
+        message(paste("'editable' option is enabled.",
+                      "Please note that it needs server logic to save any dataset change",
+                      "Please Refer to DT package documentation for more information about using that parameter."))
+    }
     dt_args <- list()
     formal_dt_args <- formalArgs(DT::datatable)
     dt_args[["rownames"]] <- TRUE
