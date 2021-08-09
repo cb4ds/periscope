@@ -90,29 +90,6 @@ test_that("download_file", {
     
 })
 
-
-test_that("downloadFile", {
-    session <- MockShinySession$new()
-    session$env$filenameroot <-  "mydownload1"
-    expect_silent(
-        periscope::downloadFile(
-            input = list(),
-            output = list(), 
-            session = session,
-            logger = periscope:::fw_get_user_log(),
-            filenameroot = "mydownload1",
-            datafxns = list(csv   = download_data,
-                            xlsx  = download_data,
-                            tsv   = download_data,
-                            txt   = download_data,
-                            png   = download_plot,
-                            jpeg  = download_plot,
-                            tiff  = download_plot,
-                            bmp   = download_plot_lattice))
-    )
-
-})
-
 test_that("downloadFile_callModule", {
     session <- MockShinySession$new()
     session$env$filenameroot <-  "mydownload1"
