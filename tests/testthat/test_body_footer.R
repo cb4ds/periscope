@@ -25,23 +25,13 @@ test_that(".bodyFooter", {
 })
 
 test_that("boody_footer", {
-    testServer(boody_footer, 
-               expr = {
-                   session$setInputs(logdata = data)
-                   expect_silent(boody_footer)
-                })
+    expect_silent(boody_footer(input = list(),
+                               output = list(), 
+                               session = MockShinySession$new(),
+                               logdata = data))
     
-    testServer(boody_footer, 
-               expr = {
-                   session$setInputs(logdata = data2)
-                   expect_silent(boody_footer)
-               })
-})
-
-test_that("boody_footer2", {
-    testServer(boody_footer, 
-               expr = {
-                   session$setInputs(logdata = data2)
-                   expect_silent(boody_footer)
-               })
+    expect_silent(boody_footer(input = list(),
+                               output = list(), 
+                               session = MockShinySession$new(),
+                               logdata = data2))
 })

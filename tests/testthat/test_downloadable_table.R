@@ -18,21 +18,22 @@ mydataRowIds <- function(){
 }
 
 
-
-
 test_that("downloadableTable", {
-    session <- MockShinySession$new()
-    session$setInputs(dtableSingleSelect = TRUE)
-    session$env$filenameroot <-  "mydownload1"
-    session$env$downloaddatafxns = list(csv = data, tsv = data)
-    expect_silent(shiny::callModule(downloadableTable,
-                                    "download",
-                                    input = list(),
-                                    output = list(), 
-                                    session = session,
-                                    logger = periscope:::fw_get_user_log(),
-                                    filenameroot = "mydownload1",
-                                    downloaddatafxns = list(csv = data, tsv = data),
-                                    tabledata = data,
-                                    selection = mydataRowIds))
+    suppressWarnings({
+        session <- MockShinySession$new()
+        session$setInputs(dtableSingleSelect = "FALSE")
+        session$env$filenameroot <-  "mydownload1"
+        session$env$downloaddatafxns = list(csv = data, tsv = data)
+        expect_silent(shiny::callModule(downloadableTable,
+                                        "download",
+                                        input = list(dtableSingleSelect = "FALSE"),
+                                        output = list(), 
+                                        session = session,
+                                        logger = periscope:::fw_get_user_log(),
+                                        filenameroot = "mydownload1",
+                                        downloaddatafxns = list(csv = data, tsv = data),
+                                        tabledata = data,
+                                        selection = mydataRowIds))
+    })
+   
 })
