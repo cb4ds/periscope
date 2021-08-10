@@ -17,7 +17,6 @@ mydataRowIds <- function(){
     rownames(mtcars)
 }
 
-
 test_that("downloadableTable", {
     suppressWarnings({
         session <- MockShinySession$new()
@@ -35,5 +34,4 @@ test_that("downloadableTable", {
                                         tabledata = data,
                                         selection = mydataRowIds))
     })
-   
 })
