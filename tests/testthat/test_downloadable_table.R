@@ -34,5 +34,4 @@ test_that("downloadableTable", {
                                         tabledata = data,
                                         selection = mydataRowIds))
     })
-    
 })
