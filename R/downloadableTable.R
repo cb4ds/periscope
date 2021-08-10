@@ -237,6 +237,7 @@ download_table <- function(input, output, session,
                            tabledata, 
                            table_options) {
     selection <- table_options[["selection"]]
+    table_options[["selection"]] <- NULL
     
     downloadFile("dtableButtonID", logger, filenameroot, downloaddatafxns)
     
