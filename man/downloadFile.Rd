@@ -4,24 +4,9 @@
 \alias{downloadFile}
 \title{downloadFile Module}
 \usage{
-downloadFile(
-  input,
-  output,
-  session,
-  logger,
-  filenameroot,
-  datafxns = list(),
-  aspectratio = 1
-)
+downloadFile(..., logger, filenameroot, datafxns = list(), aspectratio = 1)
 }
 \arguments{
-\item{input}{provided by \code{shiny::callModule}}
-
-\item{output}{provided by \code{shiny::callModule}}
-
-\item{session}{provided by \code{shiny::callModule}
-\cr \cr}
-
 \item{logger}{logger to use}
 
 \item{filenameroot}{the base text used for user-downloaded file - can be
@@ -35,6 +20,8 @@ when the button UI was created.}
 \item{aspectratio}{the downloaded chart image width:height ratio (ex:
 1 = square, 1.3 = 4:3, 0.5 = 1:2). Where not applicable for a download type
 it is ignored (e.g. data downloads).}
+
+\item{id}{string represents the module id}
 }
 \description{
 Server-side function for the downloadFileButton.  This is a custom
@@ -46,27 +33,25 @@ download types.  The server function is used to provide the data for download.
 This function is not called directly by consumers - it is accessed in
 server.R using the same id provided in \code{downloadFileButton}:
 
-\strong{\code{callModule(downloadFile, id, logger, filenameroot, datafxns)}}
+\strong{\code{downloadFile(id, logger, filenameroot, datafxns)}}
 }
 
 \examples{
 # Inside server_local.R
 
 #single download type
-# callModule(downloadFile, 
-#            "object_id1", 
-#            logger = ss_userAction.Log,
-#            filenameroot = "mydownload1",
-#            datafxns = list(csv = mydatafxn1),
-#            aspectratio = 1)
+# downloadFile("object_id1", 
+#              logger = ss_userAction.Log,
+#              filenameroot = "mydownload1",
+#              datafxns = list(csv = mydatafxn1),
+#              aspectratio = 1)
 
 #multiple download types
-# callModule(downloadFile, 
-#            "object_id2",
-#            logger = ss_userAction.Log,
-#            filenameroot = "mytype2",
-#            datafxns = list(csv = mydatafxn1, xlsx = mydatafxn2),
-#            aspectratio = 1)
+# downloadFile("object_id2",
+#              logger = ss_userAction.Log,
+#              filenameroot = "mytype2",
+#              datafxns = list(csv = mydatafxn1, xlsx = mydatafxn2),
+#              aspectratio = 1)
 
 }
 \seealso{
@@ -75,6 +60,4 @@ server.R using the same id provided in \code{downloadFileButton}:
 \link[periscope]{downloadFile_ValidateTypes}
 
 \link[periscope]{downloadFile_AvailableTypes}
-
-\link[shiny]{callModule}
 }

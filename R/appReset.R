@@ -25,21 +25,60 @@
 }
 
 # Module Server Function
-.appReset <- function(input, output, session, logger) {
+.appReset <- function(..., logger) {
+    call <- match.call()
+    params <- list(...)
+    param_index <- 1
+    params_length <- length(params)
+    old_style_call <- call[[1]] == "module" || "periscope" %in% as.character(call[[1]])
+    
+    # get session parameters
+    if (old_style_call) {
+        input   <- params[[param_index]]
+        param_index <- param_index + 1
+        output  <- params[[param_index]]
+        param_index <- param_index + 1
+        session <- params[[param_index]]
+        param_index <- param_index + 1
+    } else {
+        id <- params[[param_index]]
+        param_index <- param_index + 1
+    }
+    
+    # get rest of the function parameters
+    if (missing(logger) && params_length >= param_index) {
+        logger <- params[[param_index]]
+    }
+    
+    if (old_style_call) {
+        app_reset(input, output, session, logger)
+    }
+    else {
+        moduleServer(
+            id,
+            function(input, output, session) {
+                app_reset(input, output, session, logger)
+                
+            })   
+    }
+}
+
+
+app_reset <- function(input, output, session, logger) {
     shiny::observe({
         pending  <- shiny::isolate(input$resetPending)
         waittime <- shiny::isolate(.g_opts$reset_wait)
-
+        
         if (is.null(pending)) {
             return() # there is no reset button on the UI for the app
         }
-
+        
         if (input$resetButton && !(pending)) {
             # reset initially requested
             logwarn(paste("Application Reset requested by user. ",
-                                   "Resetting in ", (waittime / 1000),
-                                   "seconds."),
-                             logger = logger)
+                          "Resetting in ", (waittime / 1000),
+                          "seconds."),
+                    logger = logger)
             shinyBS::createAlert(
                 session, "sidebarAdvancedAlert",
                 style = "danger",
@@ -60,8 +99,8 @@
         else if (!input$resetButton && pending) {
             # reset cancelled by pushing the button again
             loginfo("Application Reset cancelled by user.",
-                             logger = logger)
-
+                    logger = logger)
+            
             shinyBS::createAlert(
                 session, "sidebarAdvancedAlert",
                 style = "success",
@@ -82,4 +121,5 @@
             session$reload()
         }
     })
-}
+    
+} 

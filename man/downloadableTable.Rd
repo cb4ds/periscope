@@ -5,9 +5,7 @@
 \title{downloadableTable Module}
 \usage{
 downloadableTable(
-  input,
-  output,
-  session,
+  ...,
   logger,
   filenameroot,
   downloaddatafxns = list(),
@@ -18,13 +16,6 @@ downloadableTable(
 )
 }
 \arguments{
-\item{input}{provided by \code{shiny::callModule}}
-
-\item{output}{provided by \code{shiny::callModule}}
-
-\item{session}{provided by \code{shiny::callModule}
-\cr \cr}
-
 \item{logger}{logger to use}
 
 \item{filenameroot}{the base text used for user-downloaded file - can be
@@ -44,6 +35,8 @@ data as a return value. This function should require no input parameters.}
 
 \item{selection}{function or reactive expression providing the row_ids of the
 rows that should be selected.}
+
+\item{id}{string represents the module id}
 }
 \value{
 Reactive expression containing the currently selected rows in the
@@ -65,7 +58,7 @@ button will be hidden as there is nothing to download.
 This function is not called directly by consumers - it is accessed in
 server.R using the same id provided in \code{downloadableTableUI}:
 
-\strong{\code{callModule(downloadableTable, id, logger, filenameroot,
+\strong{\code{downloadableTable(id, logger, filenameroot,
 downloaddatafxns, tabledata, rownames, caption, selection)}}
 
 \emph{Note}: callModule returns the reactive expression containing the
@@ -75,21 +68,18 @@ currently selected rows in the display table.
 \examples{
 # Inside server_local.R
 
-# selectedrows <- callModule(downloadableTable, 
-#                            "object_id1", 
-#                            logger = ss_userAction.Log,
-#                            filenameroot = "mydownload1",
-#                            downloaddatafxns = list(csv = mydatafxn1, tsv = mydatafxn2),
-#                            tabledata = mydatafxn3,
-#                            rownames = FALSE,
-#                            caption = "This is a great table!  By: Me",
-#                            selection = mydataRowIds)
+# selectedrows <- downloadableTable("object_id1", 
+#                                   logger = ss_userAction.Log,
+#                                   filenameroot = "mydownload1",
+#                                   downloaddatafxns = list(csv = mydatafxn1, tsv = mydatafxn2),
+#                                   tabledata = mydatafxn3,
+#                                   rownames = FALSE,
+#                                   caption = "This is a great table!  By: Me",
+#                                   selection = mydataRowIds)
 
 # selectedrows is the reactive return value, captured for later use
 
 }
 \seealso{
 \link[periscope]{downloadableTableUI}
-
-\link[shiny]{callModule}
 }

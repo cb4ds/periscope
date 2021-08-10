@@ -2,6 +2,9 @@ require(testthat)
 require(shiny)
 require(periscope)
 require(shinydashboardPlus)
+require(ggplot2)
+require(lattice)
+require(openxlsx)
 
 if (interactive()) {
     test_source_path <- "periscope/R"

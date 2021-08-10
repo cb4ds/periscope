@@ -114,7 +114,7 @@ output$download <- renderUI({
           "extensions and corresponding data functions with the ",
           "following code:"),
         p(pre("U: downloadFileButton('uiID', list(extensions))"),
-          pre("S: callModule(downloadFile, 'uiID', logger, 'filenameroot', list(datafxns)"),
+          pre("S: downloadFile('uiID', logger, 'filenameroot', list(datafxns)"),
           "Single Download: ",
           downloadFileButton("exampleDownload1", c("csv"), "csv"),
           "Multiple-choice Download: ",
@@ -193,33 +193,38 @@ loginfo("Be Sure to Remember to Log ALL user actions",
         logger = ss_userAction.Log)
 
 # -- Setup Download Modules with Functions we want called
-callModule(downloadFile, "exampleDownload1", ss_userAction.Log,
-           "examplesingle",
-           list(csv = load_data1))
-callModule(downloadFile, "exampleDownload2", ss_userAction.Log,
-           "examplemulti",
-           list(csv = load_data2, xlsx = load_data2, tsv = load_data2))
-callModule(downloadableTable, "exampleDT1",  ss_userAction.Log,
-           "exampletable",
-           list(csv = load_data3, tsv = load_data3),
-           load_data3,
-           rownames = FALSE)
+downloadFile("exampleDownload1",
+             ss_userAction.Log,
+             "examplesingle",
+             list(csv = load_data1))
+downloadFile("exampleDownload2", 
+             ss_userAction.Log,
+             "examplemulti",
+             list(csv = load_data2, xlsx = load_data2, tsv = load_data2))
+downloadableTable("exampleDT1",  
+                  ss_userAction.Log,
+                  "exampletable",
+                  list(csv = load_data3, tsv = load_data3),
+                  load_data3,
+                  rownames = FALSE)
 
-callModule(downloadablePlot, "examplePlot2", ss_userAction.Log,
-           filenameroot = "plot2_ggplot",
-           downloadfxns = list(jpeg = plot2,
-                               csv  = plot2_data),
-           aspectratio  = 1.5,
-           visibleplot  = plot2)
+downloadablePlot("examplePlot2", 
+                 ss_userAction.Log,
+                 filenameroot = "plot2_ggplot",
+                 downloadfxns = list(jpeg = plot2,
+                                     csv  = plot2_data),
+                 aspectratio  = 1.5,
+                 visibleplot  = plot2)
 
-callModule(downloadablePlot, "examplePlot3", ss_userAction.Log,
-           filenameroot = "plot3_lattice",
-           aspectratio  = 2,
-           downloadfxns = list(png  = plot3,
-                               tiff = plot3,
-                               txt  = plot3_data,
-                               tsv  = plot3_data),
-           visibleplot  = plot3)
+downloadablePlot("examplePlot3", 
+                 ss_userAction.Log,
+                 filenameroot = "plot3_lattice",
+                 aspectratio  = 2,
+                 downloadfxns = list(png  = plot3,
+                                     tiff = plot3,
+                                     txt  = plot3_data,
+                                     tsv  = plot3_data),
+                 visibleplot  = plot3)
 
 # -- Observe UI Changes
 observeEvent(input$exampleBasicAlert, {

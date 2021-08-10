@@ -8,11 +8,32 @@ test_that("downloadableTableUI", {
                                                hovertext = "myHoverText"))
 })
 
+# helper functions
+data <- function() {
+    mtcars
+}
+
+mydataRowIds <- function(){
+    rownames(mtcars)
+}
+
+
 test_that("downloadableTable", {
-    expect_error(downloadableTable(input = list(),
-                                   output = list(), 
-                                   session = MockShinySession$new(),
-                                   logger = periscope:::fw_get_user_log(),
-                                   filenameroot = "mydownload1",
-                                   tabledata = NULL))
+    suppressWarnings({
+        session <- MockShinySession$new()
+        session$setInputs(dtableSingleSelect = "FALSE")
+        session$env$filenameroot <-  "mydownload1"
+        session$env$downloaddatafxns = list(csv = data, tsv = data)
+        expect_silent(shiny::callModule(downloadableTable,
+                                        "download",
+                                        input = list(dtableSingleSelect = "FALSE"),
+                                        output = list(), 
+                                        session = session,
+                                        logger = periscope:::fw_get_user_log(),
+                                        filenameroot = "mydownload1",
+                                        downloaddatafxns = list(csv = data, tsv = data),
+                                        tabledata = data,
+                                        selection = mydataRowIds))
+    })
+   
 })
