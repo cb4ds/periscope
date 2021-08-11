@@ -313,6 +313,9 @@ download_table <- function(input, output, session,
         }
         
         table_options[["scrollY"]] <- input$dtableOutputHeight
+        if (is.null(table_options[["escape"]])) {
+            table_options[["escape"]] <- FALSE
+        }
         # get format functions
         format_options_idx <- which(startsWith(names(table_options), "format"))
         format_options <- table_options[format_options_idx]
