@@ -11,8 +11,6 @@
 #' @param downloadtypes vector of values for data download types
 #' @param hovertext download button tooltip hover text
 #' @param contentHeight viewable height of the table (any valid css size value)
-#' @param singleSelect whether the table should only allow a single row to be
-#' selected at a time (FALSE by default allows multi-select).
 #'
 #' @section Table Features:
 #' \itemize{
@@ -237,7 +235,22 @@ download_table <- function(input, output, session,
                            tabledata, 
                            table_options) {
     selection <- table_options[["selection"]]
-    table_options[["selection"]] <- NULL
+    if (any(is.null(selection),
+            !is.character(selection))) {
+        table_options[["selection"]] <- "multiple"
+    }
+    else if (!tolower(selection) %in% c("multiple", "single", "none")) {
+        message(paste("'selection' must be one of options 'multiple', 'single', 'none'",
+                      "or reactive expression for selected rows.",
+                      "Setting 'selection' to default value 'multiple'"))
+        table_options[["selection"]] <- "multiple"
+        selection <- NULL
+    }
+    else {
+        table_options[["selection"]] <- tolower(selection)
+        selection <- NULL
+    }
+    
     
     downloadFile("dtableButtonID", logger, filenameroot, downloaddatafxns)
     
@@ -254,9 +267,9 @@ download_table <- function(input, output, session,
         result <- list(mode = ifelse(input$dtableSingleSelect == "TRUE", "single", "multiple"))
         if (!is.null(selection)) {
             selection_value <- selection()
-            if (result[["mode"]] == "single" && length(selection_value) > 1) {
-                selection_value <- selection_value[1]
-            }
+            # if (result[["mode"]] == "single" && length(selection_value) > 1) {
+            #     selection_value <- selection_value[1]
+            # }
             result[["selected"]] <- selection_value
             dtInfo$selection <- NULL
         }
