@@ -78,8 +78,8 @@ is optional but important - it sets the viewable height of the table content
 which can be any css-recognizable size value.
 
 downloadableTables are multi-select by default, however if you need a table
-to only allow single row selections you can set the singleSelect argument
-to TRUE.
+to only allow single row selections or disable it you can set the selection argument
+in module server function.
 
 
 ```{r, eval=F}
@@ -88,8 +88,7 @@ to TRUE.
 downloadableTableUI("object_id1", 
                     downloadtypes = c("csv", "tsv"), 
                     hovertext = "Download the data here!",
-                    contentHeight = "300px",
-                    singleSelect = FALSE)
+                    contentHeight = "300px")
 ```
 
 ## downloadableTable
@@ -109,8 +108,8 @@ initiates a download *(see requirements below)*.
 * a data function providing the data for the visible table.  It can be the same,
 or different, data as that provided by the download data functions.  This
 allows finer control over what the user can view vs. download if desired.
-* whether or not to show rownames on the table
-* a table caption, if desired.
+* ... free parameters list to pass table customization options. 
+It supports most of DT table options customization. See example below.
 
 
 **Data Function Requirements**
@@ -145,7 +144,32 @@ selectedrows <- downloadableTable("object_id1",
                                                           tsv = mydatafxn2),
                                   tabledata = mydatafxn3,
                                   rownames = FALSE,
-                                  caption = "This is a great table!  By: Me" )
+                                  caption = "This is a great table!  By: Me",
+                                  # could also be "multiple, single or none"
+                                  selection = mydataRowIds,
+                                  # custom column names
+                                  colnames = c("Column1", "Column2", "Column3"),
+                                  # where to place column filters controls
+                                  filter = "bottom", 
+                                  # table width
+                                  width = "150px",
+                                  # table height
+                                  height = "50px",
+                                  # add addition DT extension function
+                                  extensions = 'Buttons',
+                                  # if TRUE, user will need to save edited data in server function
+                                  editable = TRUE,
+                                  # needed for the extension function
+                                  dom = 'Bfrtip',
+                                  # the extension function buttons
+                                  buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+                                  # custom style for "Column1"
+                                  formatStyle = list(columns = c('Column1'),  color = 'red'),
+                                  # advanced custom style for "Column2"
+                                  formatStyle = list(columns = c('Column2'), 
+                                                     color = DT::styleInterval(0, c('red', 'green'))),
+                                  # format "Column3" as a currency column
+                                  formatCurrency = list(columns = c('Column3'))))
 
 # selectedrows is the reactive return value, captured for later use
 ```
