@@ -111,8 +111,13 @@ downloadableTableUI <- function(id,
 #' @param tabledata function or reactive expression providing the table display
 #' data as a return value. This function should require no input parameters.
 #' @param rownames whether or not to show the rownames in the table
-#' @param selection function or reactive expression providing the row_ids of the
-#' rows that should be selected.
+#' @param selection can have one of the following values:
+#'        \describe{
+#'             \item{"single"}{for single row selection}
+#'             \item{"multiple or NULL"}{for multiple rows selection}
+#'             \item{"none"}{to disable row selection}
+#'             \item{"function or reactive expression"}{providing the row_ids of the
+#'                  rows that should be selected. Allows multiple rows selection.}}
 #'
 #' @return Reactive expression containing the currently selected rows in the
 #' display table

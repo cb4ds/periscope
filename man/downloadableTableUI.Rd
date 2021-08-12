@@ -20,9 +20,6 @@ downloadableTableUI(
 \item{hovertext}{download button tooltip hover text}
 
 \item{contentHeight}{viewable height of the table (any valid css size value)}
-
-\item{singleSelect}{whether the table should only allow a single row to be
-selected at a time (FALSE by default allows multi-select).}
 }
 \description{
 Creates a custom high-functionality table paired with a linked downloadFile
