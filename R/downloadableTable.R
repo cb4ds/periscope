@@ -325,8 +325,13 @@ download_table <- function(input, output, session,
             dt_args <- build_datatable_arguments(table_options)
         }
         
+        if (is.null(sourcedata)) {
+            sourcedata <- data.frame()
+        }
+        
         dt_args[["data"]] <- sourcedata
         dt <- do.call(DT::datatable, dt_args)
+        
         if (length(format_options) > 0) {
             dt <- format_columns(dt, format_options)
         }
