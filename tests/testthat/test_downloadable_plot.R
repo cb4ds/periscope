@@ -74,13 +74,6 @@ test_that("downloadablePlot", {
             ylab("mpg")
     }
     
-    download_plot_lattice <- function() {
-        lattice::xyplot(mpg ~ wt , data = mtcars,
-                        pch = 1, groups = factor(cyl),
-                        auto.key = list(corner = c(1, 1)),
-                        main = "Lattice Example")
-    }
-    
     download_data <- function() {
         mtcars
     }
