@@ -45,18 +45,18 @@
     }
     
     if (old_style_call) {
-        boody_footer(input, output, session, logdata)
+        body_footer(input, output, session, logdata)
     }
     else {
         shiny::moduleServer(
             id,
             function(input, output, session) {
-                boody_footer(input, output, session, logdata)
+                body_footer(input, output, session, logdata)
             })
     }
 }
 
-boody_footer <- function(input, output, session, logdata) {
+body_footer <- function(input, output, session, logdata) {
     output$dt_userlog <- shiny::renderTable({
         
         lines <- logdata()

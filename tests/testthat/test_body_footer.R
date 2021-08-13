@@ -24,14 +24,14 @@ test_that(".bodyFooter", {
     expect_equal(class(footer)[[1]], "shiny.render.function")
 })
 
-test_that("boody_footer", {
-    expect_silent(boody_footer(input = list(),
-                               output = list(), 
-                               session = MockShinySession$new(),
-                               logdata = data))
+test_that("body_footer ", {
+    expect_silent(body_footer(input = list(),
+                              output = list(), 
+                              session = MockShinySession$new(),
+                              logdata = data))
     
-    expect_silent(boody_footer(input = list(),
-                               output = list(), 
-                               session = MockShinySession$new(),
-                               logdata = data2))
+    expect_silent(body_footer(input = list(),
+                              output = list(), 
+                              session = MockShinySession$new(),
+                              logdata = data2))
 })
