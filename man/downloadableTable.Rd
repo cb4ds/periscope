@@ -16,6 +16,9 @@ downloadableTable(
 )
 }
 \arguments{
+\item{...}{free parameters list to pass table customization options. See example below.
+\emph{Note}: first argument always must be 'id' string represents the module id}
+
 \item{logger}{logger to use}
 
 \item{filenameroot}{the base text used for user-downloaded file - can be
@@ -35,8 +38,6 @@ data as a return value. This function should require no input parameters.}
 
 \item{selection}{function or reactive expression providing the row_ids of the
 rows that should be selected.}
-
-\item{id}{string represents the module id}
 }
 \value{
 Reactive expression containing the currently selected rows in the

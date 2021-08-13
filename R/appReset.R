@@ -54,7 +54,7 @@
         app_reset(input, output, session, logger)
     }
     else {
-        moduleServer(
+        shiny::moduleServer(
             id,
             function(input, output, session) {
                 app_reset(input, output, session, logger)

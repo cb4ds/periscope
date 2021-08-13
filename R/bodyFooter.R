@@ -48,7 +48,7 @@
         boody_footer(input, output, session, logdata)
     }
     else {
-        moduleServer(
+        shiny::moduleServer(
             id,
             function(input, output, session) {
                 boody_footer(input, output, session, logdata)
