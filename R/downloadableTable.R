@@ -419,7 +419,7 @@ format_columns <- function(dt, format_options) {
                      "formatround" = do.call(DT::formatRound, format_args),
                      "formatpercentage" = do.call(DT::formatPercentage, format_args),
                      "formatstring" = do.call(DT::formatstring, format_args),
-                     "formatcurrency" = do.call(DT::formatPercentage, format_args))
+                     "formatcurrency" = do.call(DT::formatCurrency, format_args))
     }
     dt
 }
