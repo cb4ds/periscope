@@ -155,7 +155,6 @@ downloadFile <- function(...,
     params_length <- length(params)
     old_style_call <- call[[1]] == "module" || "periscope" %in% as.character(call[[1]])
     
-    # get session parameters
     if (old_style_call) {
         input   <- params[[param_index]]
         param_index <- param_index + 1
@@ -168,7 +167,6 @@ downloadFile <- function(...,
         param_index <- param_index + 1
     }
     
-    # get rest of the function parameters
     if (missing(logger) && params_length >= param_index) {
         logger <- params[[param_index]]
         param_index <- param_index + 1
