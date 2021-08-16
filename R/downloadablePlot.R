@@ -131,7 +131,7 @@ downloadablePlotUI <- function(id,
 #' plot output paired with a linked downloadFile button.
 #'
 #' @param ... free parameters list for shiny to pass session variables based on the module call(session, input, output)
-#'  variables. \emph{Note}: User must send first argument only which is string represents the module id
+#'  variables. \emph{Note}: The first argument of this function must be the ID of the Module's UI element
 #' @param logger logger to use
 #' @param filenameroot the base text used for user-downloaded file - can be
 #' either a character string or a reactive expression returning a character

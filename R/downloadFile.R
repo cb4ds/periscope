@@ -104,7 +104,7 @@ downloadFileButton <- function(id,
 #' high-functionality button for file downloads supporting single or multiple
 #' download types.  The server function is used to provide the data for download.
 #' @param ... free parameters list for shiny to pass session variables based on the module call(session, input, output)
-#'  variables. \emph{Note}: User must send first argument only which is string represents the module id
+#'  variables. \emph{Note}: The first argument of this function must be the ID of the Module's UI element
 #' @param logger logger to use
 #' @param filenameroot the base text used for user-downloaded file - can be
 #' either a character string or a reactive expression that returns a character
