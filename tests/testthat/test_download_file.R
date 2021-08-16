@@ -21,10 +21,6 @@ download_data_show_row_names <- function() {
     mtcars
 }
 
-download_openxlsx_data <- function() {
-    openxlsx::createWorkbook()
-}
-
 download_string_list <- function() {
     c("test1", "test2", "tests")
 }
