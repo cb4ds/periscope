@@ -12,13 +12,6 @@ download_plot <- function() {
         ylab("mpg")
 }
 
-download_plot_lattice <- function() {
-    lattice::xyplot(mpg ~ wt , data = mtcars,
-                    pch = 1, groups = factor(cyl),
-                    auto.key = list(corner = c(1, 1)),
-                    main = "Lattice Example")
-}
-
 download_data <- function() {
     mtcars
 }
@@ -26,10 +19,6 @@ download_data <- function() {
 download_data_show_row_names <- function() {
     attr(mtcars, "show_rownames") <-  TRUE
     mtcars
-}
-
-download_openxlsx_data <- function() {
-    openxlsx::createWorkbook()
 }
 
 download_string_list <- function() {
@@ -85,7 +74,7 @@ test_that("download_file", {
                             png   = download_plot,
                             jpeg  = download_plot,
                             tiff  = download_plot,
-                            bmp   = download_plot_lattice))
+                            bmp   = download_plot))
     )
     
 })
@@ -100,7 +89,7 @@ test_that("downloadFile_callModule", {
                                  png   = download_plot,
                                  jpeg  = download_plot,
                                  tiff  = download_plot,
-                                 bmp   = download_plot_lattice)
+                                 bmp   = download_plot)
     expect_silent(shiny::callModule(downloadFile,
                                     "download",
                                     input = list(),
@@ -115,5 +104,5 @@ test_that("downloadFile_callModule", {
                                                     png   = download_plot,
                                                     jpeg  = download_plot,
                                                     tiff  = download_plot,
-                                                    bmp   = download_plot_lattice)))
+                                                    bmp   = download_plot)))
 })

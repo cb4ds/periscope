@@ -32,7 +32,6 @@
     params_length <- length(params)
     old_style_call <- call[[1]] == "module" || "periscope" %in% as.character(call[[1]])
     
-    # get session parameters
     if (old_style_call) {
         input   <- params[[param_index]]
         param_index <- param_index + 1
@@ -45,7 +44,6 @@
         param_index <- param_index + 1
     }
     
-    # get rest of the function parameters
     if (missing(logger) && params_length >= param_index) {
         logger <- params[[param_index]]
     }
@@ -54,11 +52,10 @@
         app_reset(input, output, session, logger)
     }
     else {
-        moduleServer(
+        shiny::moduleServer(
             id,
             function(input, output, session) {
                 app_reset(input, output, session, logger)
-                
             })   
     }
 }

@@ -88,7 +88,8 @@ downloadableTableUI <- function(id,
 #' high-functionality table paired with a linked downloadFile
 #' button.
 #'
-#' @param id string represents the module id
+#' @param ... free parameters list to pass table customization options. See example below.
+#'            \emph{Note}: The first argument of this function must be the ID of the Module's UI element
 #' @param logger logger to use
 #' @param filenameroot the base text used for user-downloaded file - can be
 #' either a character string or a reactive expression returning a character
@@ -151,7 +152,6 @@ downloadableTable <- function(...,
     params_length <- length(params)
     old_style_call <- call[[1]] == "module" || "periscope" %in% as.character(call[[1]])
     
-    # get session parameters
     if (old_style_call) {
         input   <- params[[param_index]]
         param_index <- param_index + 1
@@ -164,7 +164,6 @@ downloadableTable <- function(...,
         param_index <- param_index + 1
     }
     
-    # get rest of the function parameters
     if (missing(logger) && params_length >= param_index) {
         logger <- params[[param_index]]
         param_index <- param_index + 1
@@ -211,7 +210,7 @@ downloadableTable <- function(...,
                        selection)
     }
     else {
-        moduleServer(id = params[[1]], 
+        shiny::moduleServer(id = params[[1]], 
                      function(input, output, session) {
                          download_table(input, output, session, 
                                         logger,

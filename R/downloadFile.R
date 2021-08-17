@@ -103,7 +103,8 @@ downloadFileButton <- function(id,
 #' Server-side function for the downloadFileButton.  This is a custom
 #' high-functionality button for file downloads supporting single or multiple
 #' download types.  The server function is used to provide the data for download.
-#' @param id string represents the module id
+#' @param ... free parameters list for shiny to pass session variables based on the module call(session, input, output)
+#'  variables. \emph{Note}: The first argument of this function must be the ID of the Module's UI element
 #' @param logger logger to use
 #' @param filenameroot the base text used for user-downloaded file - can be
 #' either a character string or a reactive expression that returns a character
@@ -154,7 +155,6 @@ downloadFile <- function(...,
     params_length <- length(params)
     old_style_call <- call[[1]] == "module" || "periscope" %in% as.character(call[[1]])
     
-    # get session parameters
     if (old_style_call) {
         input   <- params[[param_index]]
         param_index <- param_index + 1
@@ -167,7 +167,6 @@ downloadFile <- function(...,
         param_index <- param_index + 1
     }
     
-    # get rest of the function parameters
     if (missing(logger) && params_length >= param_index) {
         logger <- params[[param_index]]
         param_index <- param_index + 1
@@ -198,7 +197,7 @@ downloadFile <- function(...,
                       aspectratio)
     } 
     else {
-        moduleServer(
+        shiny::moduleServer(
             id,
             function(input, output, session) {
                 download_file(input, 

@@ -7,6 +7,9 @@
 downloadFile(..., logger, filenameroot, datafxns = list(), aspectratio = 1)
 }
 \arguments{
+\item{...}{free parameters list for shiny to pass session variables based on the module call(session, input, output)
+variables. \emph{Note}: The first argument of this function must be the ID of the Module's UI element}
+
 \item{logger}{logger to use}
 
 \item{filenameroot}{the base text used for user-downloaded file - can be
@@ -20,8 +23,6 @@ when the button UI was created.}
 \item{aspectratio}{the downloaded chart image width:height ratio (ex:
 1 = square, 1.3 = 4:3, 0.5 = 1:2). Where not applicable for a download type
 it is ignored (e.g. data downloads).}
-
-\item{id}{string represents the module id}
 }
 \description{
 Server-side function for the downloadFileButton.  This is a custom

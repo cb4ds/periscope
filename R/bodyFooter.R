@@ -26,7 +26,6 @@
     params_length <- length(params)
     old_style_call <- call[[1]] == "module" || "periscope" %in% as.character(call[[1]])
     
-    # get session parameters
     if (old_style_call) {
         input   <- params[[param_index]]
         param_index <- param_index + 1
@@ -39,24 +38,23 @@
         param_index <- param_index + 1
     }
     
-    # get rest of the function parameters
     if (missing(logdata) && params_length >= param_index) {
         logdata <- params[[param_index]]
     }
     
     if (old_style_call) {
-        boody_footer(input, output, session, logdata)
+        body_footer(input, output, session, logdata)
     }
     else {
-        moduleServer(
+        shiny::moduleServer(
             id,
             function(input, output, session) {
-                boody_footer(input, output, session, logdata)
+                body_footer(input, output, session, logdata)
             })
     }
 }
 
-boody_footer <- function(input, output, session, logdata) {
+body_footer <- function(input, output, session, logdata) {
     output$dt_userlog <- shiny::renderTable({
         
         lines <- logdata()
