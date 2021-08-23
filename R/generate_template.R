@@ -17,6 +17,7 @@
 #' containing the name of a shiny::icon().
 #' @param leftsidebar whether the left sidebar should be enabled.
 #' @param style list containing application styling properties. By default the skin is blue.
+#' @param custom_theme_file location of custom theme settings yaml file. Default value is NULL.
 #'
 #' @section Name:
 #' The \code{name} directory must not exist in \code{location}.  If the code
@@ -113,7 +114,14 @@
 #' create_new_application(name = 'myblankapp', location = tempdir(), leftsidebar = FALSE)
 #'
 #' @export
-create_new_application <- function(name, location, sampleapp = FALSE, resetbutton = TRUE, rightsidebar = FALSE, leftsidebar = TRUE, style = list(skin = "blue")) {
+create_new_application <- function(name, 
+                                   location, 
+                                   sampleapp = FALSE,
+                                   resetbutton = TRUE,
+                                   rightsidebar = FALSE, 
+                                   leftsidebar = TRUE, 
+                                   style = list(skin = "blue"),
+                                   custom_theme_file = NULL) {
     usersep <- .Platform$file.sep
     newloc <- paste(location, name, sep = usersep)
 
@@ -153,7 +161,16 @@ create_new_application <- function(name, location, sampleapp = FALSE, resetbutto
         }
         
         .create_dirs(newloc, usersep)
-        .copy_fw_files(newloc, usersep, resetbutton, dashboard_plus, leftsidebar, right_sidebar_icon, style)
+        if (!is.null(custom_theme_file)) {
+            if (any(!is.character(custom_theme_file),
+                    length(custom_theme_file) != 1,
+                    custom_theme_file == "",
+                    !file.exists(custom_theme_file))) {
+                warning("'custom_theme_file' must be single character value pointing to valid yaml file location. Using default values.")
+                custom_theme_file <- NULL
+            }
+        }
+        .copy_fw_files(newloc, usersep, resetbutton, dashboard_plus, leftsidebar, right_sidebar_icon, style, custom_theme_file)
         .copy_program_files(newloc, usersep, sampleapp, resetbutton, leftsidebar, dashboard_plus)
 
         message("Framework creation was successful.")
@@ -185,7 +202,14 @@ create_new_application <- function(name, location, sampleapp = FALSE, resetbutto
 }
 
 # Create Framework Files ----------------------------
-.copy_fw_files <- function(newloc, usersep, resetbutton = TRUE, dashboard_plus = FALSE, leftsidebar = TRUE, right_sidebar_icon = NULL, style = list(skin = "blue")) {
+.copy_fw_files <- function(newloc, 
+                           usersep,
+                           resetbutton = TRUE, 
+                           dashboard_plus = FALSE,
+                           leftsidebar = TRUE, 
+                           right_sidebar_icon = NULL,
+                           style = list(skin = "blue"),
+                           custom_theme_file) {
     files <- c("global.R",
                "server.R")
     if (dashboard_plus) {
@@ -256,7 +280,11 @@ create_new_application <- function(name, location, sampleapp = FALSE, resetbutto
             con = paste(newloc, "www", "img", file, sep = usersep))
     }
 
-    return()
+    if (!is.null(custom_theme_file)) {
+        file.copy(custom_theme_file, paste(newloc, "www", "periscope_style.yaml", sep = usersep))
+    } else {
+        create_default_theme_file(paste(newloc, "www", "periscope_style.yaml", sep = usersep))
+    }
 }
 
 # Create Program Files ----------------------------
@@ -310,6 +338,54 @@ create_new_application <- function(name, location, sampleapp = FALSE, resetbutto
                 con = paste(targetdir, unlist(supporting_files[file], use.names = F), file, sep = usersep))
         }
     }
+}
 
-    return()
+create_default_theme_file <- function(theme_file) {
+    lines <- c("### primary_color",
+               "# Sets the primary status color that affects the color of the header, valueBox, infoBox and box.",
+               "# Valid values are names of the color or hex-decimal value of the color (i.e,: \"blue\", \"#086A87\").",
+               "# Blank/empty value will use default value",
+               "primary_color: \n\n",
+               
+               
+               "# Sidebar variables: change the default sidebar width, colors:",
+               "### sidebar_width",
+               "# Width is to be specified as a numeric value in pixels. Must be greater than 0 and include numbers only.",
+               "# Valid possible value are 200, 350, 425, ...",
+               "# Blank/empty value will use default value",
+               "sidebar_width: \n",
+               
+               "### sidebar_background_color",
+               "# Valid values are names of the color or hex-decimal value of the color (i.e,: \"blue\", \"#086A87\").",
+               "# Blank/empty value will use default value",
+               "sidebar_background_color: \n",
+               
+               "### sidebar_hover_color",
+               "# The color of sidebar menu item upon hovring with mouse.",
+               "# Valid values are names of the color or hex-decimal value of the color (i.e,: \"blue\", \"#086A87\").",
+               "# Blank/empty value will use default value",
+               "sidebar_hover_color: \n",
+               
+               "### sidebar_text_color",
+               "# Valid values are names of the color or hex-decimal value of the color (i.e,: \"blue\", \"#086A87\").",
+               "# Blank/empty value will use default value",
+               "sidebar_text_color: \n\n",
+               
+               "# body variables",
+               "### body_background_color",
+               "# Valid values are names of the color or hex-decimal value of the color (i.e,: \"blue\", \"#086A87\").",
+               "# Blank/empty value will use default value",
+               "body_background_color: \n",
+               
+               "# boxes variables",
+               "### box_color",
+               "# Valid values are names of the color or hex-decimal value of the color (i.e,: \"blue\", \"#086A87\").",
+               "# Blank/empty value will use default value",
+               "box_color: \n",
+               
+               "### infobox_color",
+               "# Valid values are names of the color or hex-decimal value of the color (i.e,: \"blue\", \"#086A87\").",
+               "# Blank/empty value will use default value",
+               "infobox_color: ")
+    writeLines(lines, theme_file) 
 }

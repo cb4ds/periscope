@@ -28,7 +28,9 @@ Imports:
     writexl (>= 1.3),
     ggplot2 (>= 2.2),
     methods,
-    utils
+    utils,
+    fresh,
+    yaml
 RoxygenNote: 7.1.1
 Suggests:
     knitr,
