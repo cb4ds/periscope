@@ -182,9 +182,9 @@ create_theme <- function() {
     body_background_color     <- NULL
     box_color                 <- NULL
     infobox_color             <- NULL
-    theme_colors_keys         <- c("primary_color", "sidebar_background", "sidebar_background_hover",
-                                   "sidebar_color", "body_background", "body_box_background",
-                                   "body_info_background")
+    theme_colors_keys         <- c("primary_color", "sidebar_background_color", "sidebar_hover_color",
+                                   "sidebar_text_color", "body_background_color", "box_color",
+                                   "infobox_color")
     
     if (file.exists("www/periscope_style.yaml")) {
         theme_settings <- tryCatch({
