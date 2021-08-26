@@ -78,8 +78,8 @@ is optional but important - it sets the viewable height of the table content
 which can be any css-recognizable size value.
 
 downloadableTables are multi-select by default, however if you need a table
-to only allow single row selections or disable it you can set the selection argument
-in module server function.
+to only allow single row selections you can set the singleSelect argument
+to TRUE.
 
 
 ```{r, eval=F}
@@ -88,7 +88,8 @@ in module server function.
 downloadableTableUI("object_id1", 
                     downloadtypes = c("csv", "tsv"), 
                     hovertext = "Download the data here!",
-                    contentHeight = "300px")
+                    contentHeight = "300px",
+                    singleSelect = FALSE)
 ```
 
 ## downloadableTable

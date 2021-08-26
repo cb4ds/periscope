@@ -11,6 +11,8 @@
 #' @param downloadtypes vector of values for data download types
 #' @param hovertext download button tooltip hover text
 #' @param contentHeight viewable height of the table (any valid css size value)
+#' @param singleSelect whether the table should only allow a single row to be
+#' selected at a time (FALSE by default allows multi-select).
 #'
 #' @section Table Features:
 #' \itemize{
@@ -111,13 +113,8 @@ downloadableTableUI <- function(id,
 #' @param tabledata function or reactive expression providing the table display
 #' data as a return value. This function should require no input parameters.
 #' @param rownames whether or not to show the rownames in the table
-#' @param selection can have one of the following values:
-#'        \describe{
-#'             \item{"single"}{for single row selection}
-#'             \item{"multiple or NULL"}{for multiple rows selection}
-#'             \item{"none"}{to disable row selection}
-#'             \item{"function or reactive expression"}{providing the row_ids of the
-#'                  rows that should be selected. Allows multiple rows selection.}}
+#' @param selection function or reactive expression providing the row_ids of the
+#' rows that should be selected
 #'
 #' @return Reactive expression containing the currently selected rows in the
 #' display table
@@ -240,22 +237,17 @@ download_table <- function(input, output, session,
                            tabledata, 
                            table_options) {
     selection <- table_options[["selection"]]
-    if (any(is.null(selection),
-            !is.character(selection))) {
-        table_options[["selection"]] <- "multiple"
-    }
-    else if (!tolower(selection) %in% c("multiple", "single", "none")) {
-        message(paste("'selection' must be one of options 'multiple', 'single', 'none'",
-                      "or reactive expression for selected rows.",
-                      "Setting 'selection' to default value 'multiple'"))
-        table_options[["selection"]] <- "multiple"
-        selection <- NULL
-    }
-    else {
-        table_options[["selection"]] <- tolower(selection)
+    if (all(!is.null(selection),
+            is.character(selection))) {
+        message("'selection' parameter must be a function or reactive expression. Setting default value NULL.")
+        table_options[["selection"]] <- NULL
         selection <- NULL
     }
     
+    if (!is.null(table_options[["editable"]])) {
+        message("'editable' DT parameter is not supported. Ignoring it.")
+        table_options[["editable"]] <- NULL
+    }
     
     downloadFile("dtableButtonID", logger, filenameroot, downloaddatafxns)
     
@@ -272,9 +264,9 @@ download_table <- function(input, output, session,
         result <- list(mode = ifelse(input$dtableSingleSelect == "TRUE", "single", "multiple"))
         if (!is.null(selection)) {
             selection_value <- selection()
-            # if (result[["mode"]] == "single" && length(selection_value) > 1) {
-            #     selection_value <- selection_value[1]
-            # }
+            if (result[["mode"]] == "single" && length(selection_value) > 1) {
+                selection_value <- selection_value[1]
+            }
             result[["selected"]] <- selection_value
             dtInfo$selection <- NULL
         }
@@ -318,6 +310,7 @@ download_table <- function(input, output, session,
         }
         
         table_options[["scrollY"]] <- input$dtableOutputHeight
+        table_options[["selection"]] <- dtInfo$selection
         if (is.null(table_options[["escape"]])) {
             table_options[["escape"]] <- FALSE
         }
