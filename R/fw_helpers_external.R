@@ -241,7 +241,7 @@ create_theme <- function() {
 
 is_valid_color <- function(color) {
     tryCatch({
-        col2rgb(color)
+        grDevices::col2rgb(color)
         TRUE
     },
     error = function(e) {
