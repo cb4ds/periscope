@@ -14,7 +14,7 @@ downloadableTable(
 }
 \arguments{
 \item{...}{free parameters list to pass table customization options. See example below.
-\emph{Note}: first argument always must be 'id' string represents the module id}
+\emph{Note}: The first argument of this function must be the ID of the Module's UI element}
 
 \item{logger}{logger to use}
 
