@@ -375,7 +375,7 @@ build_datatable_arguments <- function(table_options) {
         options[["deferRender"]] <- FALSE
     }
     
-    if (is.null(options[["paging"]])) {
+    if (is.null(options[["paging"]]) && is.null(table_options[["pageLength"]])) {
         options[["paging"]] <- FALSE
     }
     
@@ -383,7 +383,7 @@ build_datatable_arguments <- function(table_options) {
         options[["scrollX"]] <- TRUE
     }
     
-    if (is.null(options[["dom"]])) {
+    if (is.null(options[["dom"]]) && is.null(table_options[["pageLength"]])) {
         options[["dom"]] <- '<"periscope-downloadable-table-header"f>tr'
     }
     
@@ -391,9 +391,9 @@ build_datatable_arguments <- function(table_options) {
         options[["processing"]] <- TRUE
     }
     
-    # if (is.null(options[["rowId"]])) {
-    #     options[["rowId"]] <- 1
-    # }
+    if (is.null(options[["rowId"]])) {
+        options[["rowId"]] <- 1
+    }
     
     if (is.null(options[["searchHighlight"]])) {
         options[["searchHighlight"]] <- TRUE
