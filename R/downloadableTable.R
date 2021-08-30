@@ -296,9 +296,6 @@ download_table <- function(input, output, session,
     
     output$dtableOutputID <- DT::renderDataTable({
         sourcedata <- dtInfo$tabledata
-        if (!is.null(table_options[["colnames"]])) {
-            names(sourcedata) <- table_options[["colnames"]]
-        }
         
         if (!is.null(sourcedata) && nrow(sourcedata) > 0) {
             row.names <- rownames(sourcedata)
