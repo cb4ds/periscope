@@ -306,8 +306,12 @@ download_table <- function(input, output, session,
             }
         }
         
-        table_options[["scrollY"]] <- input$dtableOutputHeight
+        if (is.null(table_options[["scrollY"]])) {
+            table_options[["scrollY"]] <- input$dtableOutputHeight
+        }
+        
         table_options[["selection"]] <- dtInfo$selection
+        
         if (is.null(table_options[["escape"]])) {
             table_options[["escape"]] <- FALSE
         }
