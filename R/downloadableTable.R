@@ -207,9 +207,9 @@ downloadableTable <- function(...,
         param_index <- param_index + 1
     }
     
-    if (missing(selection) && params_length >= param_index) {
-        selection <- params[[param_index]]
-        param_index <- param_index + 1
+    if (missing(selection)) {
+        selection <- params[["selection"]]
+        params[["selection"]] <- NULL
     }
     
     if (old_style_call) {
@@ -305,11 +305,7 @@ download_table <- function(input, output, session,
             row.ids   <- as.character(seq(1:nrow(sourcedata)))
             if (is.null(row.names) || identical(row.names, row.ids)) {
                 DT_RowId <- paste0("rowid_", row.ids)
-                sourcedata <- cbind(DT_RowId, sourcedata)
-            } else {
-                col.names  <- colnames(sourcedata)
-                sourcedata <- cbind(row.names, sourcedata)
-                colnames(sourcedata) <- c(" ", col.names)
+                rownames(sourcedata) <- DT_RowId
             }
         }
         
@@ -318,6 +314,11 @@ download_table <- function(input, output, session,
         if (is.null(table_options[["escape"]])) {
             table_options[["escape"]] <- FALSE
         }
+        
+        if (is.null(table_options[["rownames"]])) {
+            table_options[["rownames"]] <- FALSE
+        }
+        
         # get format functions
         format_options_idx <- which(startsWith(names(table_options), "format"))
         format_options <- table_options[format_options_idx]
@@ -332,12 +333,19 @@ download_table <- function(input, output, session,
         }
         
         dt_args[["data"]] <- sourcedata
-        dt <- do.call(DT::datatable, dt_args)
         
-        if (length(format_options) > 0) {
-            dt <- format_columns(dt, format_options)
-        }
-        dt
+        tryCatch({
+            dt <- do.call(DT::datatable, dt_args)
+            
+            if (length(format_options) > 0) {
+                dt <- format_columns(dt, format_options)
+            }
+            dt
+        },
+        error = function(e) {
+            message("Could not apply DT options due to: ", e$message)
+            DT::datatable(sourcedata)
+        })
     })
     
     
@@ -370,12 +378,6 @@ build_datatable_arguments <- function(table_options) {
         options[["deferRender"]] <- FALSE
     }
     
-    if (is.null(options[["columnDefs"]])) {
-        options[["columnDefs"]] <- list(list(targets = 0,
-                                             visible = FALSE,
-                                             searchable = FALSE))
-    }
-    
     if (is.null(options[["paging"]])) {
         options[["paging"]] <- FALSE
     }
@@ -392,9 +394,9 @@ build_datatable_arguments <- function(table_options) {
         options[["processing"]] <- TRUE
     }
     
-    if (is.null(options[["rowId"]])) {
-        options[["rowId"]] <- 1
-    }
+    # if (is.null(options[["rowId"]])) {
+    #     options[["rowId"]] <- 1
+    # }
     
     if (is.null(options[["searchHighlight"]])) {
         options[["searchHighlight"]] <- TRUE
