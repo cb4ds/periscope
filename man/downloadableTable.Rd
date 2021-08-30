@@ -9,7 +9,8 @@ downloadableTable(
   logger,
   filenameroot,
   downloaddatafxns = list(),
-  tabledata
+  tabledata,
+  selection = NULL
 )
 }
 \arguments{
@@ -28,8 +29,6 @@ when the table UI was created.}
 
 \item{tabledata}{function or reactive expression providing the table display
 data as a return value. This function should require no input parameters.}
-
-\item{rownames}{whether or not to show the rownames in the table}
 
 \item{selection}{function or reactive expression providing the row_ids of the
 rows that should be selected}

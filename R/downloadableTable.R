@@ -112,7 +112,6 @@ downloadableTableUI <- function(id,
 #' when the table UI was created.
 #' @param tabledata function or reactive expression providing the table display
 #' data as a return value. This function should require no input parameters.
-#' @param rownames whether or not to show the rownames in the table
 #' @param selection function or reactive expression providing the row_ids of the
 #' rows that should be selected
 #'
@@ -167,7 +166,8 @@ downloadableTable <- function(...,
                               logger,
                               filenameroot, 
                               downloaddatafxns = list(),
-                              tabledata) {
+                              tabledata,
+                              selection = NULL) {
     call <- match.call()
     params <- list(...)
     param_index <- 1
@@ -207,12 +207,18 @@ downloadableTable <- function(...,
         param_index <- param_index + 1
     }
     
+    if (missing(selection)) {
+        selection <- params[["selection"]]
+        params[["selection"]] <- NULL
+    }
+    
     if (old_style_call) {
         download_table(input, output, session, 
                        logger,
                        filenameroot, 
                        downloaddatafxns,
                        tabledata, 
+                       selection,
                        params[param_index:params_length])
     }
     else {
@@ -222,7 +228,8 @@ downloadableTable <- function(...,
                                         logger,
                                         filenameroot, 
                                         downloaddatafxns,
-                                        tabledata, 
+                                        tabledata,
+                                        selection,
                                         params[param_index:params_length])
                      })
     }
@@ -233,12 +240,11 @@ download_table <- function(input, output, session,
                            filenameroot, 
                            downloaddatafxns = list(),
                            tabledata, 
+                           selection,
                            table_options) {
-    selection <- table_options[["selection"]]
     if (all(!is.null(selection),
             is.character(selection))) {
         message("'selection' parameter must be a function or reactive expression. Setting default value NULL.")
-        table_options[["selection"]] <- NULL
         selection <- NULL
     }
     
@@ -290,28 +296,30 @@ download_table <- function(input, output, session,
     
     output$dtableOutputID <- DT::renderDataTable({
         sourcedata <- dtInfo$tabledata
-        if (!is.null(table_options[["colnames"]])) {
-            names(sourcedata) <- table_options[["colnames"]]
-        }
         
         if (!is.null(sourcedata) && nrow(sourcedata) > 0) {
             row.names <- rownames(sourcedata)
             row.ids   <- as.character(seq(1:nrow(sourcedata)))
             if (is.null(row.names) || identical(row.names, row.ids)) {
                 DT_RowId <- paste0("rowid_", row.ids)
-                sourcedata <- cbind(DT_RowId, sourcedata)
-            } else {
-                col.names  <- colnames(sourcedata)
-                sourcedata <- cbind(row.names, sourcedata)
-                colnames(sourcedata) <- c(" ", col.names)
+                rownames(sourcedata) <- DT_RowId
             }
         }
         
-        table_options[["scrollY"]] <- input$dtableOutputHeight
+        if (is.null(table_options[["scrollY"]])) {
+            table_options[["scrollY"]] <- input$dtableOutputHeight
+        }
+        
         table_options[["selection"]] <- dtInfo$selection
+        
         if (is.null(table_options[["escape"]])) {
             table_options[["escape"]] <- FALSE
         }
+        
+        if (is.null(table_options[["rownames"]])) {
+            table_options[["rownames"]] <- FALSE
+        }
+        
         # get format functions
         format_options_idx <- which(startsWith(names(table_options), "format"))
         format_options <- table_options[format_options_idx]
@@ -326,12 +334,19 @@ download_table <- function(input, output, session,
         }
         
         dt_args[["data"]] <- sourcedata
-        dt <- do.call(DT::datatable, dt_args)
         
-        if (length(format_options) > 0) {
-            dt <- format_columns(dt, format_options)
-        }
-        dt
+        tryCatch({
+            dt <- do.call(DT::datatable, dt_args)
+            
+            if (length(format_options) > 0) {
+                dt <- format_columns(dt, format_options)
+            }
+            dt
+        },
+        error = function(e) {
+            message("Could not apply DT options due to: ", e$message)
+            DT::datatable(sourcedata)
+        })
     })
     
     
@@ -347,7 +362,7 @@ build_datatable_arguments <- function(table_options) {
                       "Please Refer to DT package documentation for more information about using that parameter."))
     }
     dt_args <- list()
-    formal_dt_args <- formalArgs(DT::datatable)
+    formal_dt_args <- methods::formalArgs(DT::datatable)
     dt_args[["rownames"]] <- TRUE
     dt_args[["class"]] <- paste("periscope-downloadable-table table-condensed",
                                "table-striped table-responsive")
@@ -364,13 +379,7 @@ build_datatable_arguments <- function(table_options) {
         options[["deferRender"]] <- FALSE
     }
     
-    if (is.null(options[["columnDefs"]])) {
-        options[["columnDefs"]] <- list(list(targets = 0,
-                                             visible = FALSE,
-                                             searchable = FALSE))
-    }
-    
-    if (is.null(options[["paging"]])) {
+    if (is.null(options[["paging"]]) && is.null(table_options[["pageLength"]])) {
         options[["paging"]] <- FALSE
     }
     
@@ -378,7 +387,7 @@ build_datatable_arguments <- function(table_options) {
         options[["scrollX"]] <- TRUE
     }
     
-    if (is.null(options[["dom"]])) {
+    if (is.null(options[["dom"]]) && is.null(table_options[["pageLength"]])) {
         options[["dom"]] <- '<"periscope-downloadable-table-header"f>tr'
     }
     
@@ -409,7 +418,7 @@ format_columns <- function(dt, format_options) {
                      "formatsignif" = do.call(DT::formatSignif, format_args),
                      "formatround" = do.call(DT::formatRound, format_args),
                      "formatpercentage" = do.call(DT::formatPercentage, format_args),
-                     "formatstring" = do.call(DT::formatstring, format_args),
+                     "formatstring" = do.call(DT::formatString, format_args),
                      "formatcurrency" = do.call(DT::formatCurrency, format_args))
     }
     dt
