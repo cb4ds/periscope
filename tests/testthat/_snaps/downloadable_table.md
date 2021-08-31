@@ -84,19 +84,6 @@
       $options$deferRender
       [1] FALSE
       
-      $options$columnDefs
-      $options$columnDefs[[1]]
-      $options$columnDefs[[1]]$targets
-      [1] 0
-      
-      $options$columnDefs[[1]]$visible
-      [1] FALSE
-      
-      $options$columnDefs[[1]]$searchable
-      [1] FALSE
-      
-      
-      
       $options$paging
       [1] FALSE
       

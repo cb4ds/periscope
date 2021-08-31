@@ -57,8 +57,13 @@ dataset using format functions names as keys and their options as a list.
 }
 \section{Notes}{
 
-When there are no rows to download in any of the linked downloaddatafxns the
-button will be hidden as there is nothing to download.
+ \itemize{
+  \item When there are no rows to download in any of the linked downloaddatafxns 
+  the button will be hidden as there is nothing to download.
+  \item \code{selection} parameter has different usage than DT::datatable \code{selection} option. 
+  See parameters usage section.
+  \item DT::datatable option \code{editable} is not supported
+}
 }
 
 \section{Shiny Usage}{
@@ -69,7 +74,7 @@ server.R using the same id provided in \code{downloadableTableUI}:
 \strong{\code{downloadableTable(id, logger, filenameroot,
 downloaddatafxns, tabledata, rownames, caption, selection)}}
 
-\emph{Note}: callModule returns the reactive expression containing the
+\emph{Note}: calling module server returns the reactive expression containing the
 currently selected rows in the display table.
 }
 
