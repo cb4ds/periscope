@@ -2,6 +2,7 @@ context("periscope create new application")
 
 
 expect_cleanup_create_new_application <- function(fullname, sampleapp = FALSE, dashboard_plus = FALSE, leftsidebar = TRUE, skin = NULL) {
+    local_edition(3)
     expect_true(dir.exists(fullname))
     expect_true(file.exists(paste0(fullname, "/global.R")))
     expect_true(file.exists(paste0(fullname, "/server.R")))
@@ -9,6 +10,7 @@ expect_cleanup_create_new_application <- function(fullname, sampleapp = FALSE, d
     expect_true(dir.exists(paste0(fullname, "/www")))
     expect_true(dir.exists(paste0(fullname, "/www/css")))
     expect_true(dir.exists(paste0(fullname, "/www/js")))
+    expect_true(file.exists(paste0(fullname, "/www/periscope_style.yaml")))
     expect_true(dir.exists(paste0(fullname, "/www/img")))
     expect_true(file.exists(paste0(fullname, "/www/img/loader.gif")))
     expect_true(file.exists(paste0(fullname, "/www/img/tooltip.png")))
@@ -178,6 +180,26 @@ test_that("create_new_application invalid style", {
     expect_error(create_new_application(name = appTemp.name, location = appTemp.dir, sampleapp = FALSE, rightsidebar = NULL, style = mtcars), 
                  "Framework creation could not proceed, invalid type for style, only list allowed")
 })
+
+test_that("create_new_application invalid yaml file", {
+    appTemp.dir  <- tempdir()
+    appTemp      <- tempfile(pattern = "TestThatApp", tmpdir = appTemp.dir)
+    appTemp.name <- gsub('\\\\|/', '', (gsub(appTemp.dir, "", appTemp, fixed = T)))
+    
+    expect_warning(create_new_application(name = appTemp.name, location = appTemp.dir, sampleapp = FALSE, rightsidebar = NULL, custom_theme_file = ""), 
+                   "'custom_theme_file' must be single character value pointing to valid yaml file location. Using default values.")
+})
+
+test_that("create_new_application with valid yaml file", {
+    appTemp.dir  <- tempdir()
+    appTemp      <- tempfile(pattern = "TestThatApp", tmpdir = appTemp.dir)
+    appTemp.name <- gsub('\\\\|/', '', (gsub(appTemp.dir, "", appTemp, fixed = T)))
+    yaml_loc     <- "sample_app/www/periscope_style.yaml" 
+    
+    expect_message(create_new_application(name = appTemp.name, location = appTemp.dir, sampleapp = FALSE, rightsidebar = NULL, custom_theme_file = yaml_loc), 
+                   "Framework creation was successful.")
+})
+
 
 test_that("create_new_application invalid location", {
     expect_warning(create_new_application(name = "Invalid", location = tempfile(), sampleapp = FALSE),
