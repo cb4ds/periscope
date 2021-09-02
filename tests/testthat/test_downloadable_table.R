@@ -9,18 +9,18 @@ test_that("downloadableTableUI", {
 })
 
 # helper functions
-data <- function() {
-    mtcars
-}
+data <- reactive({
+    c(1,2)
+})
 
 mydataRowIds <- function(){
     rownames(mtcars)
 }
 
-test_that("downloadableTable", {
+test_that("downloadableTable - singleSelect_FALSE_selection_enabled", {
     suppressWarnings({
         session <- MockShinySession$new()
-        session$setInputs(dtableSingleSelect = "FALSE")
+        session$setInputs(dtableSingleSelect = FALSE)
         session$env$filenameroot <-  "mydownload1"
         session$env$downloaddatafxns = list(csv = data, tsv = data)
         expect_silent(shiny::callModule(downloadableTable,
@@ -36,6 +36,99 @@ test_that("downloadableTable", {
     })
 })
 
+test_that("downloadableTable - free_parameters", {
+    suppressWarnings({
+        session <- MockShinySession$new()
+        session$setInputs(dtableSingleSelect = FALSE)
+        session$env$filenameroot <-  "mydownload1"
+        session$env$downloaddatafxns = list(csv = data, tsv = data)
+        expect_silent(shiny::callModule(downloadableTable,
+                                        "download",
+                                        input = list(dtableSingleSelect = "FALSE"),
+                                        output = list(), 
+                                        session = session,
+                                        periscope:::fw_get_user_log(),
+                                        "mydownload1",
+                                        list(csv = data, tsv = data),
+                                        data,
+                                        selection = mydataRowIds))
+    })
+})
+
+test_that("downloadableTable - new module call", {
+    suppressWarnings({
+        session <- MockShinySession$new()
+        session$setInputs(dtableSingleSelect = FALSE)
+        session$env$filenameroot <-  "mydownload1"
+        session$env$downloaddatafxns = list(csv = data, tsv = data)
+        expect_error(downloadableTable("download",
+                                       input = list(dtableSingleSelect = "FALSE"),
+                                       output = list(), 
+                                       session = session,
+                                       logger = periscope:::fw_get_user_log(),
+                                       filenameroot = "mydownload1",
+                                       downloaddatafxns = list(csv = data, tsv = data),
+                                       tabledata = data,
+                                       selection = mydataRowIds))
+                                        
+    })
+})
+
+test_that("downloadableTable - singleSelect_TRUE_selection_enabled", {
+    suppressWarnings({
+        session <- MockShinySession$new()
+        session$setInputs(dtableSingleSelect = TRUE)
+        session$env$filenameroot <-  "mydownload1"
+        session$env$downloaddatafxns = list(csv = data, tsv = data)
+        expect_silent(shiny::callModule(downloadableTable,
+                                        "download",
+                                        input = list(dtableSingleSelect = "FALSE"),
+                                        output = list(), 
+                                        session = session,
+                                        logger = periscope:::fw_get_user_log(),
+                                        filenameroot = "mydownload1",
+                                        downloaddatafxns = list(csv = data, tsv = data),
+                                        tabledata = data,
+                                        selection = mydataRowIds))
+    })
+})
+
+test_that("downloadableTable - singleSelect and selection disabled", {
+    suppressWarnings({
+        session <- MockShinySession$new()
+        session$setInputs(dtableSingleSelect = TRUE)
+        session$env$filenameroot <-  "mydownload1"
+        session$env$downloaddatafxns = list(csv = data, tsv = data)
+        expect_silent(shiny::callModule(downloadableTable,
+                                        "download",
+                                        input = list(dtableSingleSelect = "FALSE"),
+                                        output = list(), 
+                                        session = session,
+                                        logger = periscope:::fw_get_user_log(),
+                                        filenameroot = "mydownload1",
+                                        downloaddatafxns = list(csv = data, tsv = data),
+                                        tabledata = data))
+    })
+})
+
+test_that("downloadableTable - invalid_selection", {
+    suppressWarnings({
+        session <- MockShinySession$new()
+        session$setInputs(dtableSingleSelect = TRUE)
+        session$env$filenameroot <-  "mydownload1"
+        session$env$downloaddatafxns = list(csv = data, tsv = data)
+        expect_message(shiny::callModule(downloadableTable,
+                                        "download",
+                                        input = list(dtableSingleSelect = "FALSE"),
+                                        output = list(), 
+                                        session = session,
+                                        logger = periscope:::fw_get_user_log(),
+                                        filenameroot = "mydownload1",
+                                        downloaddatafxns = list(csv = data, tsv = data),
+                                        tabledata = data,
+                                        selection = "single"))
+    })
+})
 
 test_that("build_datatable_arguments", {
     local_edition(3)
