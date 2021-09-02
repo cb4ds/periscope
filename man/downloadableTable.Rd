@@ -62,7 +62,7 @@ dataset using format functions names as keys and their options as a list.
   the button will be hidden as there is nothing to download.
   \item \code{selection} parameter has different usage than DT::datatable \code{selection} option. 
   See parameters usage section.
-  \item DT::datatable option \code{editable} is not supported
+  \item DT::datatable options \code{editable}, \code{width} and \code{height} are not supported
 }
 }
 
