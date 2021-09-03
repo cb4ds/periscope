@@ -407,7 +407,6 @@ build_datatable_arguments <- function(table_options) {
     if (is.null(options[["searchHighlight"]])) {
         options[["searchHighlight"]] <- TRUE
     }
-    dt_args[["callback"]] <- htmlwidgets::JS(dt_args[["callback"]])
     dt_args[["options"]] <- options
     dt_args
 }
