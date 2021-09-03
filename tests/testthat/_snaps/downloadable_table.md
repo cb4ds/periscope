@@ -35,8 +35,6 @@
       
       $callback
       [1] "table.order([2, 'asc']).draw();"
-      attr(,"class")
-      [1] "JS_EVAL"
       
       $caption
       [1] " Very Important Information"
