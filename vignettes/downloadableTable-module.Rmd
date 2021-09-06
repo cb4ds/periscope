@@ -140,7 +140,7 @@ needed.
 *Note*: 
 
 * `selection` parameter in the server function has different usage than `DT::datatable` `selection` option as it should be a function or reactive expression providing the row_ids of the rows that should be selected. Its default value is `NULL`
-* `editable` option in `DT::datatable` is not supported
+* `editable`, `width` and `height` option in `DT::datatable` are not supported
 
 
 

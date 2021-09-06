@@ -25,7 +25,9 @@
     Code
       build_datatable_arguments(table_options)
     Message <simpleMessage>
-      'editable' option is enabled. Please note that it needs server logic to save any dataset change Please Refer to DT package documentation for more information about using that parameter.
+      DT option 'width' is not supported. Ignoring it.
+      DT option 'height' is not supported. Ignoring it.
+      DT option 'editable' is not supported. Ignoring it.
     Output
       $rownames
       [1] FALSE
@@ -45,20 +47,11 @@
       $filter
       [1] "bottom"
       
-      $width
-      [1] "150px"
-      
-      $height
-      [1] "50px"
-      
       $extensions
       [1] "Buttons"
       
       $plugins
       [1] "natural"
-      
-      $editable
-      [1] TRUE
       
       $options
       $options$order
