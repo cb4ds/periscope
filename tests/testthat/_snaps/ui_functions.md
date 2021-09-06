@@ -25,8 +25,7 @@
     <aside id="sidebarCollapsed" class="main-sidebar" data-collapsed="true">
       <section id="sidebarItemExpanded" class="sidebar">
         <script>$("<div class='periscope-title'> Set using set_app_parameters() in program/global.R </div>").insertAfter($("a.sidebar-toggle"));</script>
-        <script>$('[class~="sidebar-toggle"]').remove();
-                                        $('[class~="logo"]').css('background-color', '#3c8dbc');</script>
+        <script>$('[class~="sidebar-toggle"]').remove();</script>
       </section>
     </aside>
 

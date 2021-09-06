@@ -16,7 +16,6 @@
 #' @param rightsidebar parameter to set the right sidebar. It can be TRUE/FALSE or a character 
 #' containing the name of a shiny::icon().
 #' @param leftsidebar whether the left sidebar should be enabled.
-#' @param style list containing application styling properties. By default the skin is blue.
 #' @param custom_theme_file location of custom theme settings yaml file. Default value is NULL.
 #'
 #' @section Name:
@@ -109,7 +108,7 @@
 #' # blank app named 'myblankapp' created in a temp dir
 #' create_new_application(name = 'myblankapp', location = tempdir())
 #' # blank app named 'myblankapp' with a green skin created in a temp dir
-#' create_new_application(name = 'myblankapp', location = tempdir(), style = list(skin = "green"))
+#' create_new_application(name = 'myblankapp', location = tempdir())
 #' # blank app named 'myblankapp' without a left sidebar created in a temp dir
 #' create_new_application(name = 'myblankapp', location = tempdir(), leftsidebar = FALSE)
 #'
@@ -120,7 +119,6 @@ create_new_application <- function(name,
                                    resetbutton = TRUE,
                                    rightsidebar = FALSE, 
                                    leftsidebar = TRUE, 
-                                   style = list(skin = "blue"),
                                    custom_theme_file = NULL) {
     usersep <- .Platform$file.sep
     newloc <- paste(location, name, sep = usersep)
@@ -146,15 +144,6 @@ create_new_application <- function(name,
                 stop("Framework creation could not proceed, invalid type for rightsidebar, only logical or character allowed")
             }
         }
-        if (!is.null(style)) {
-            if (class(style) == "list") {
-                if (!identical(intersect("skin", names(style)), character(0)) && !identical(class(style$skin), "character")) {
-                    stop("Framework creation could not proceed, invalid type for skin, only character allowed. See ?shinydashboard::dashboardPage for supported colors.")  
-                }
-            } else {
-                stop("Framework creation could not proceed, invalid type for style, only list allowed")  
-            }
-        }
         
         if (!(.g_sdp_installed) && dashboard_plus) {
             stop('shinyDashboardPlus is not currently installed -- it is required to generate an application with a right sidebar.')
@@ -170,7 +159,7 @@ create_new_application <- function(name,
                 custom_theme_file <- NULL
             }
         }
-        .copy_fw_files(newloc, usersep, resetbutton, dashboard_plus, leftsidebar, right_sidebar_icon, style, custom_theme_file)
+        .copy_fw_files(newloc, usersep, resetbutton, dashboard_plus, leftsidebar, right_sidebar_icon, custom_theme_file)
         .copy_program_files(newloc, usersep, sampleapp, resetbutton, leftsidebar, dashboard_plus)
 
         message("Framework creation was successful.")
@@ -208,7 +197,6 @@ create_new_application <- function(name,
                            dashboard_plus = FALSE,
                            leftsidebar = TRUE, 
                            right_sidebar_icon = NULL,
-                           style = list(skin = "blue"),
                            custom_theme_file) {
     files <- c("global.R",
                "server.R")
@@ -257,19 +245,7 @@ create_new_application <- function(name,
         writeLines(ui_content, con = ui_file)
         close(ui_file)
     }
-    # styling
-    if (!is.null(style) && identical(class(style), "list") && length(style) > 0 &&
-        !identical(intersect("skin", names(style)), character(0)) && !identical(style, list(skin = "blue"))) {
-        skin_value  <- style$skin
-        ui_file     <- file(paste(newloc, "ui.R", sep = usersep), open = "r+")
-        ui_content  <- readLines(con = ui_file)
-        ui_content[length(ui_content)]     <- paste0(substr(ui_content[length(ui_content)], 1, nchar(ui_content[length(ui_content)]) - 1), ",")
-        white_space <- paste(rep(" ", ifelse(dashboard_plus, nchar("dashboardPagePlus"), nchar("dashboardPage"))), collapse = "")
-        ui_content[length(ui_content) + 1] <- sprintf("%s skin = '%s')", white_space, skin_value)
-        writeLines(ui_content, con = ui_file)
-        close(ui_file)
-    }
-    
+
     #subdir copies
     imgs <- c("loader.gif", "tooltip.png")
     for (file in imgs) {
