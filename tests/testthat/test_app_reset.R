@@ -51,7 +51,15 @@ test_that(".appReset", {
                                input = list(),
                                output = list(), 
                                session = MockShinySession$new(),
-                               logger = periscope:::fw_get_user_log())
+                               periscope:::fw_get_user_log())
     expect_equal(class(reset)[[1]], "Observer")
     expect_equal(class(reset)[[2]], "R6")
+})
+
+test_that(".appReset - new call", {
+    expect_error(.appReset("reset", 
+                           input = list(),
+                           output = list(), 
+                           session = MockShinySession$new(),
+                           logger = periscope:::fw_get_user_log()))
 })

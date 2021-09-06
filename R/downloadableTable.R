@@ -124,7 +124,7 @@ downloadableTableUI <- function(id,
 #'   the button will be hidden as there is nothing to download.
 #'   \item \code{selection} parameter has different usage than DT::datatable \code{selection} option. 
 #'   See parameters usage section.
-#'   \item DT::datatable option \code{editable} is not supported
+#'   \item DT::datatable options \code{editable}, \code{width} and \code{height} are not supported
 #' }
 #'
 #' @section Shiny Usage:
@@ -253,11 +253,6 @@ download_table <- function(input, output, session,
         selection <- NULL
     }
     
-    if (!is.null(table_options[["editable"]])) {
-        message("'editable' DT parameter is not supported. Ignoring it.")
-        table_options[["editable"]] <- NULL
-    }
-    
     downloadFile("dtableButtonID", logger, filenameroot, downloaddatafxns)
     
     session$sendCustomMessage("downloadbutton_toggle",
@@ -361,11 +356,6 @@ download_table <- function(input, output, session,
 }
 
 build_datatable_arguments <- function(table_options) {
-    if (!is.null(table_options[["editable"]]) && table_options[["editable"]]) {
-        message(paste("'editable' option is enabled.",
-                      "Please note that it needs server logic to save any dataset change",
-                      "Please Refer to DT package documentation for more information about using that parameter."))
-    }
     dt_args <- list()
     formal_dt_args <- methods::formalArgs(DT::datatable)
     dt_args[["rownames"]] <- TRUE
@@ -373,9 +363,14 @@ build_datatable_arguments <- function(table_options) {
                                "table-striped table-responsive")
     options <- list()
     for (option in names(table_options)) {
+        if (option %in% c("editable", "width", "height")) {
+            message("DT option '", option ,"' is not supported. Ignoring it.")
+            next
+        }
+        
         if (option %in% formal_dt_args) {
             dt_args[[option]] <- table_options[[option]]
-        } else{
+        } else {
             options[[option]] <- table_options[[option]]
         }
     }
@@ -407,7 +402,6 @@ build_datatable_arguments <- function(table_options) {
     if (is.null(options[["searchHighlight"]])) {
         options[["searchHighlight"]] <- TRUE
     }
-    dt_args[["callback"]] <- htmlwidgets::JS(dt_args[["callback"]])
     dt_args[["options"]] <- options
     dt_args
 }

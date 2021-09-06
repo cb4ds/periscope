@@ -31,7 +31,6 @@ Imports:
     utils,
     fresh,
     yaml,
-    htmlwidgets,
     grDevices
 RoxygenNote: 7.1.1
 Suggests:
