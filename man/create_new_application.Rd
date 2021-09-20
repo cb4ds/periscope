@@ -11,7 +11,7 @@ create_new_application(
   resetbutton = TRUE,
   rightsidebar = FALSE,
   leftsidebar = TRUE,
-  style = list(skin = "blue")
+  custom_theme_file = NULL
 )
 }
 \arguments{
@@ -28,7 +28,7 @@ containing the name of a shiny::icon().}
 
 \item{leftsidebar}{whether the left sidebar should be enabled.}
 
-\item{style}{list containing application styling properties. By default the skin is blue.}
+\item{custom_theme_file}{location of custom theme settings yaml file. Default value is NULL.}
 }
 \description{
 Creates ready-to-use templated application files using the periscope
@@ -133,7 +133,7 @@ rightsidebar = "table")
 # blank app named 'myblankapp' created in a temp dir
 create_new_application(name = 'myblankapp', location = tempdir())
 # blank app named 'myblankapp' with a green skin created in a temp dir
-create_new_application(name = 'myblankapp', location = tempdir(), style = list(skin = "green"))
+create_new_application(name = 'myblankapp', location = tempdir())
 # blank app named 'myblankapp' without a left sidebar created in a temp dir
 create_new_application(name = 'myblankapp', location = tempdir(), leftsidebar = FALSE)
 
