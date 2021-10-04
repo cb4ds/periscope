@@ -39,5 +39,6 @@ Suggests:
     shinydashboardPlus,
     testthat (>= 3.0),
     canvasXpress,
-    openxlsx (>= 3.0)
+    openxlsx (>= 3.0),
+    colourpicker
 VignetteBuilder: knitr
