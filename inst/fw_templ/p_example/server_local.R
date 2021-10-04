@@ -159,6 +159,57 @@ output$hover_info <- renderUI({
     }
 })
 
+output$styles <- renderUI({
+    load_themes$themes <- read_themes()
+    list(p("User can control application styles using www/periscope_style.yaml.\n The following parameters explain how to use that file."),
+         p("Note. Color values can be:",
+           tags$ul(tags$li("Hex Value:", HTML("&nbsp;"), tags$b(tags$i("i.e. '#31A5CC'"))),
+                   tags$li("RGB Value:", HTML("&nbsp;"), tags$b(tags$i("i.e. 'rgb(49, 165, 204)'"))),
+                   tags$li("Color Name:", HTML("&nbsp;"), tags$b(tags$i("i.e. 'green', 'red', ..."))))),
+         fluidRow(
+             column(width = 6,
+                    colourpicker::colourInput("primary_color", 
+                                              ui_tooltip("primary_tip", 
+                                                         "Primary Color", 
+                                                         "Sets the primary status color that affects the color of the header, valueBox, infoBox and box."),
+                                              load_themes$themes[["primary_color"]])),
+             column(width = 6,
+                    numericInput("sidebar_width", 
+                                 ui_tooltip("sidebar_width_tip", 
+                                            "Sidebar Width", 
+                                            "Change the default sidebar width"),
+                                 load_themes$themes[["sidebar_width"]]))
+         ),
+         fluidRow(
+             column(width = 6,
+                    colourpicker::colourInput("sidebar_background_color", 
+                                              ui_tooltip("sidebar_background_color_tip", 
+                                                         "Sidebar Background Color", 
+                                                         "Change the default sidebar background color"),
+                                              load_themes$themes[["sidebar_background_color"]])),
+             column(width = 6,
+                    colourpicker::colourInput("body_background_color", 
+                                              ui_tooltip("body_background_color_tip", 
+                                                         "Body Background Color", 
+                                                         "Change body background color"),
+                                              load_themes$themes[["body_background_color"]]))
+             
+         ),
+         fluidRow(
+             column(width = 6,
+                    colourpicker::colourInput("box_color", 
+                                              ui_tooltip("box_color_tip", 
+                                                         "Box Color", 
+                                                         "Change box default color"),
+                                              load_themes$themes[["box_color"]])),
+             column(width = 6,
+                    br(),
+                    bsButton("updateStyles",
+                             label  = "Update Application Theme"),
+                    style = "margin-top: 5px;"))
+    )
+    
+})
 # -- CanvasXpress Plot Example
 
 output$examplePlot1  <- renderCanvasXpress({
@@ -207,6 +258,21 @@ downloadableTable("exampleDT1",
                   formatStyle = list(columns = c("Natural.Increase"),   
                                      backgroundColor = DT::styleInterval(c(7614, 15914, 34152),
                                                                          c("blue", "lightblue", "#FF7F7F", "red"))))
+
+
+output$table_info <- renderUI({
+    list(
+        tags$ul(tags$li("User can customize downloadableTable modules through many options. such as:",
+                        tags$ul(tags$li("Table labels options:", HTML("&nbsp;"),
+                                        tags$b(tags$i("i.e. 'colnames', 'caption', ..."))),
+                                tags$li("Table layout and columns styles options:", HTML("&nbsp;"),
+                                        tags$b(tags$i("i.e. 'container', 'formatStyle', ..."))),
+                                tags$li("Table addons options:", HTML("&nbsp;"),
+                                        tags$b(tags$i("i.e. 'filter', 'callback', ..."))))),
+                tags$li("For more information about table options please visit",
+                        tags$a("DT documentation", href = "https://rstudio.github.io/DT/"))
+        ))
+})
 
 downloadablePlot("examplePlot2", 
                  ss_userAction.Log,
