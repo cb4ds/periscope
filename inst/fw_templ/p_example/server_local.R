@@ -232,7 +232,6 @@ sketch <- htmltools::withTags(table(
     class = "display",
     thead(
         tr(
-            th(rowspan = 2, "ID"),
             th(rowspan = 2, "Location"),
             th(colspan = 2, "Statistics")
         ),
