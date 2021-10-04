@@ -175,12 +175,36 @@ downloadFile("exampleDownload2",
              ss_userAction.Log,
              "examplemulti",
              list(csv = load_data2, xlsx = load_data2, tsv = load_data2))
-downloadableTable("exampleDT1", 
+sketch <- htmltools::withTags(table(
+    class = "display",
+    thead(
+        tr(
+            th(rowspan = 2, "ID"),
+            th(rowspan = 2, "Location"),
+            th(colspan = 2, "Statistics")
+        ),
+        tr(
+            th("Change"),
+            th("Increase")
+        )
+        
+    )
+))
+
+downloadableTable("exampleDT1",
                   ss_userAction.Log,
                   "exampletable",
                   list(csv = load_data3, tsv = load_data3),
                   load_data3,
-                  rownames = FALSE)
+                  colnames = c("Area", "Delta", "Increase"),
+                  filter = "bottom",
+                  callback = htmlwidgets::JS("table.order([1, 'asc']).draw();"),
+                  container = sketch,
+                  formatStyle = list(columns = c("Total.Population.Change"),   
+                                     color = DT::styleInterval(0, c("red", "green"))),
+                  formatStyle = list(columns = c("Natural.Increase"),   
+                                     backgroundColor = DT::styleInterval(c(7614, 15914, 34152),
+                                                                         c("blue", "lightblue", "#FF7F7F", "red"))))
 
 downloadablePlot("examplePlot2", 
                  ss_userAction.Log,
