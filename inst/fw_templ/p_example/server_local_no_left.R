@@ -365,7 +365,7 @@ observeEvent(input$updateStyles, {
                "### infobox_color",
                "# Valid values are names of the color or hex-decimal value of the color (i.e,: \"blue\", \"#086A87\").",
                "# Blank/empty value will use default value",
-               glue("infobox_color: '{input$infobox_color}'"), .transformer = null_transformer)
+               glue("infobox_color: '{input$infobox_color}'", .transformer = null_transformer))
     write(lines, "www/periscope_style.yaml", append = F)
     load_themes$themes <- read_themes()
     styles_box_collapsed(FALSE)

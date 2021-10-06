@@ -159,7 +159,7 @@ create_new_application <- function(name,
                 custom_theme_file <- NULL
             }
         }
-        .copy_fw_files(newloc, usersep, resetbutton, dashboard_plus, leftsidebar, right_sidebar_icon, custom_theme_file)
+        .copy_fw_files(newloc, usersep, resetbutton, dashboard_plus, leftsidebar, right_sidebar_icon, custom_theme_file, sampleapp)
         .copy_program_files(newloc, usersep, sampleapp, resetbutton, leftsidebar, dashboard_plus)
 
         message("Framework creation was successful.")
@@ -197,7 +197,8 @@ create_new_application <- function(name,
                            dashboard_plus = FALSE,
                            leftsidebar = TRUE, 
                            right_sidebar_icon = NULL,
-                           custom_theme_file) {
+                           custom_theme_file,
+                           sampleapp = FALSE) {
     files <- c("global.R",
                "server.R")
     if (dashboard_plus) {
@@ -245,6 +246,19 @@ create_new_application <- function(name,
         writeLines(ui_content, con = ui_file)
         close(ui_file)
     }
+    
+    if (sampleapp) {
+        ui_file    <- file(paste(newloc, "ui.R", sep = usersep), open = "r")
+        ui_content <- readLines(con = ui_file)
+        close(ui_file)
+        ui_content <- gsub("periscope:::fw_create_body()", 
+                           "uiOutput('body')", 
+                           ui_content,
+                           fixed = TRUE)
+        ui_file    <- file(paste(newloc, "ui.R", sep = usersep), open = "w")
+        writeLines(ui_content, con = ui_file)
+        close(ui_file)
+    }
 
     #subdir copies
     imgs <- c("loader.gif", "tooltip.png")
@@ -258,6 +272,9 @@ create_new_application <- function(name,
 
     if (!is.null(custom_theme_file)) {
         file.copy(custom_theme_file, paste(newloc, "www", "periscope_style.yaml", sep = usersep))
+    } else if (sampleapp) {
+        file.copy(system.file("fw_templ", "www", "periscope_style.yaml", package = "periscope"),
+                  paste(newloc, "www", "periscope_style.yaml", sep = usersep))
     } else {
         create_default_theme_file(paste(newloc, "www", "periscope_style.yaml", sep = usersep))
     }

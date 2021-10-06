@@ -2,7 +2,7 @@
 # Sets the primary status color that affects the color of the header, valueBox, infoBox and box.
 # Valid values are names of the color or hex-decimal value of the color (i.e,: "blue", "#086A87").
 # Blank/empty value will use default value
-primary_color: 
+primary_color: "#31A5CC"
 
 
 # Sidebar variables: change the default sidebar width, colors:
@@ -10,12 +10,12 @@ primary_color:
 # Width is to be specified as a numeric value in pixels. Must be greater than 0 and include numbers only.
 # Valid possible value are 200, 350, 425, ...
 # Blank/empty value will use default value
-sidebar_width: 
+sidebar_width: 300
 
 ### sidebar_background_color
 # Valid values are names of the color or hex-decimal value of the color (i.e,: "blue", "#086A87").
 # Blank/empty value will use default value
-sidebar_background_color: 
+sidebar_background_color: "#00FF00"
 
 ### sidebar_hover_color
 # The color of sidebar menu item upon hovring with mouse.
@@ -33,13 +33,13 @@ sidebar_text_color:
 ### body_background_color
 # Valid values are names of the color or hex-decimal value of the color (i.e,: "blue", "#086A87").
 # Blank/empty value will use default value
-body_background_color: 
+body_background_color: "#C7DFE8"
 
 # boxes variables
 ### box_color
 # Valid values are names of the color or hex-decimal value of the color (i.e,: "blue", "#086A87").
 # Blank/empty value will use default value
-box_color: 
+box_color: "#FDFFF5"
 
 ### infobox_color
 # Valid values are names of the color or hex-decimal value of the color (i.e,: "blue", "#086A87").
