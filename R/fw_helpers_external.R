@@ -163,6 +163,8 @@ fw_create_body <- function() {
             shiny::tags$head(
                 shiny::tags$style(.framework_css()),
                 shiny::tags$script(.framework_js())),
+            shiny::tags$script(
+                shiny::HTML("$('.skin-blue .main-header .logo').css('background-color', $('.skin-blue .main-header .navbar').css('background-color'))")),
             info_content,
             shiny::isolate(.g_opts$body_elements),
             if (shiny::isolate(.g_opts$show_userlog)) {
