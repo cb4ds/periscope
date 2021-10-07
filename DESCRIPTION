@@ -40,6 +40,5 @@ Suggests:
     testthat (>= 3.0),
     canvasXpress,
     openxlsx (>= 3.0),
-    colourpicker,
-    glue
+    colourpicker
 VignetteBuilder: knitr

@@ -24,7 +24,6 @@
 # ----------------------------------------
 
 # -- IMPORTS --
-library(glue)
 
 # -- VARIABLES --
 load_themes <- reactiveValues(themes = NULL)
@@ -320,11 +319,17 @@ output$body <- renderUI({
 })
 
 observeEvent(input$updateStyles, {
+    req(input$primary_color)
+    req(input$sidebar_width)
+    req(input$sidebar_background_color)
+    req(input$body_background_color)
+    req(input$box_color)
+    
     lines <- c("### primary_color",
                "# Sets the primary status color that affects the color of the header, valueBox, infoBox and box.",
                "# Valid values are names of the color or hex-decimal value of the color (i.e,: \"blue\", \"#086A87\").",
                "# Blank/empty value will use default value",
-               glue("primary_color: '{input$primary_color}' \n\n", .transformer = null_transformer),
+               paste0("primary_color: '", input$primary_color, "'\n\n"),
                
                
                "# Sidebar variables: change the default sidebar width, colors:",
@@ -332,40 +337,41 @@ observeEvent(input$updateStyles, {
                "# Width is to be specified as a numeric value in pixels. Must be greater than 0 and include numbers only.",
                "# Valid possible value are 200, 350, 425, ...",
                "# Blank/empty value will use default value",
-               glue("sidebar_width: {input$sidebar_width} \n", .transformer = null_transformer),
+               paste0("sidebar_width: ", input$sidebar_width, "\n"),
                
                "### sidebar_background_color",
                "# Valid values are names of the color or hex-decimal value of the color (i.e,: \"blue\", \"#086A87\").",
                "# Blank/empty value will use default value",
-               glue("sidebar_background_color: '{input$sidebar_background_color}' \n", .transformer = null_transformer),
+               paste0("sidebar_background_color: '", input$sidebar_background_color, "'\n"),
                
                "### sidebar_hover_color",
                "# The color of sidebar menu item upon hovring with mouse.",
                "# Valid values are names of the color or hex-decimal value of the color (i.e,: \"blue\", \"#086A87\").",
                "# Blank/empty value will use default value",
-               glue("sidebar_hover_color: '{input$sidebar_hover_color}' \n", .transformer = null_transformer),
+               "sidebar_hover_color: \n",
                
                "### sidebar_text_color",
                "# Valid values are names of the color or hex-decimal value of the color (i.e,: \"blue\", \"#086A87\").",
                "# Blank/empty value will use default value",
-               glue("sidebar_text_color: '{input$sidebar_text_color}' \n\n", .transformer = null_transformer),
+               "sidebar_text_color: \n\n",
                
                "# body variables",
                "### body_background_color",
                "# Valid values are names of the color or hex-decimal value of the color (i.e,: \"blue\", \"#086A87\").",
                "# Blank/empty value will use default value",
-               glue("body_background_color: '{input$body_background_color}' \n", .transformer = null_transformer),
+               paste0("body_background_color: '", input$body_background_color, "'\n"),
                
                "# boxes variables",
                "### box_color",
                "# Valid values are names of the color or hex-decimal value of the color (i.e,: \"blue\", \"#086A87\").",
                "# Blank/empty value will use default value",
-               glue("box_color: '{input$box_color}' \n", .transformer = null_transformer),
+               paste0("box_color: '", input$box_color, "'\n"),
                
                "### infobox_color",
                "# Valid values are names of the color or hex-decimal value of the color (i.e,: \"blue\", \"#086A87\").",
                "# Blank/empty value will use default value",
-               glue("infobox_color: '{input$infobox_color}'", .transformer = null_transformer))
+               "infobox_color: ")
+    
     write(lines, "www/periscope_style.yaml", append = F)
     load_themes$themes <- read_themes()
     styles_box_collapsed(FALSE)

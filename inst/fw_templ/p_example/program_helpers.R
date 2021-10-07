@@ -33,12 +33,3 @@ load_data3 <- function() {
 read_themes <- function() {
     yaml::read_yaml("www/periscope_style.yaml")
 }
-
-null_transformer <- function(text, envir) {
-    out <- identity_transformer(text, envir)
-    if (is.null(out)) {
-        return("")
-    }
-    
-    out
-}
