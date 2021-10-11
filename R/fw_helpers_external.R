@@ -145,6 +145,20 @@ fw_create_right_sidebar <- function() {
 
 # Framework UI Body Creation
 fw_create_body <- function() {
+    header_color_style          <- paste0("$('.skin-blue .main-header .logo').css('background-color',",
+                                          "$('.skin-blue .main-header .navbar').css('background-color'))")
+    update_right_side_bar_width <- paste0("$('.navbar-custom-menu').on('click',function() { ",
+                                          "$('.control-sidebar-open').css('width', ", 
+                                          "$('.main-sidebar').css('width'));});")
+    init_right_bar              <- "init_sidebar = setInterval(
+                                        function() {
+                                           if ($('html').attr('class') !='shiny-busy') {
+                                               if ($('.control-sidebar').css('width') == $('.main-sidebar').css('width')) {
+                                                   clearInterval(init_sidebar);
+                                               }
+                                               $('.control-sidebar').css('width', $('.main-sidebar').css('width'));
+                                           }
+                                       }, 500);"
     app_info <- shiny::isolate(.g_opts$app_info)
     info_content <- NULL
 
@@ -157,21 +171,23 @@ fw_create_body <- function() {
                 app_info)
     }
 
-    return(
-        shinydashboard::dashboardBody(
-            fresh::use_theme(create_theme()),
-            shiny::tags$head(
-                shiny::tags$style(.framework_css()),
-                shiny::tags$script(.framework_js())),
-            shiny::tags$script(
-                shiny::HTML("$('.skin-blue .main-header .logo').css('background-color', $('.skin-blue .main-header .navbar').css('background-color'))")),
-            info_content,
-            shiny::isolate(.g_opts$body_elements),
-            if (shiny::isolate(.g_opts$show_userlog)) {
-                .bodyFooterOutput("footerId") }
-            else {NULL}
-        )
+    shinydashboard::dashboardBody(
+        fresh::use_theme(create_theme()),
+        shiny::tags$head(
+            shiny::tags$style(.framework_css()),
+            shiny::tags$script(.framework_js()),
+            shiny::tags$script(shiny::HTML(header_color_style)),
+            shiny::tags$script(shiny::HTML(update_right_side_bar_width)),
+            shiny::tags$script(init_right_bar)),
+        info_content,
+        shiny::isolate(.g_opts$body_elements),
+        if (shiny::isolate(.g_opts$show_userlog)) {
+            .bodyFooterOutput("footerId") 
+        } else {
+            NULL
+        }
     )
+    
 }
 
 create_theme <- function() {
