@@ -212,8 +212,7 @@ output$styles <- renderUI({
                                  ui_tooltip("sidebar_width_tip", 
                                             "Sidebar Width", 
                                             "Change the default sidebar width"),
-                                 load_themes$themes[["sidebar_width"]]))
-         ),
+                                 load_themes$themes[["sidebar_width"]]))),
          fluidRow(
              column(width = 6,
                     colourpicker::colourInput("sidebar_background_color", 
@@ -226,9 +225,7 @@ output$styles <- renderUI({
                                               ui_tooltip("body_background_color_tip", 
                                                          "Body Background Color", 
                                                          "Change body background color"),
-                                              load_themes$themes[["body_background_color"]]))
-             
-         ),
+                                              load_themes$themes[["body_background_color"]]))),
          fluidRow(
              column(width = 6,
                     colourpicker::colourInput("box_color", 
@@ -240,8 +237,7 @@ output$styles <- renderUI({
                     br(),
                     bsButton("updateStyles",
                              label  = "Update Application Theme"),
-                    style = "margin-top: 5px;"))
-    )
+                    style = "margin-top: 5px;")))
     
 })
 # -- CanvasXpress Plot Example
@@ -266,19 +262,16 @@ downloadFile("exampleDownload2",
              ss_userAction.Log,
              "examplemulti",
            list(csv = load_data2, xlsx = load_data2, tsv = load_data2))
-sketch <- htmltools::withTags(table(
-    class = "display",
-    thead(
-        tr(
-            th(rowspan = 2, "Location"),
-            th(colspan = 2, "Statistics")
-        ),
-        tr(
-            th("Change"),
-            th("Increase")
-        )
-        
-    )
+sketch <- htmltools::withTags(
+    table(
+        class = "display",
+        thead(
+            tr(
+                th(rowspan = 2, "Location"),
+                th(colspan = 2, "Statistics")),
+            tr(
+                th("Change"),
+                th("Increase")))
 ))
 
 downloadableTable("exampleDT1",
@@ -437,10 +430,11 @@ observeEvent(input$updateStyles, {
 })
 
 output$app_styling <- renderUI({
-    shinydashboard::box(id      = "app_styling",
+    shinydashboard::box(id          = "app_styling",
                         title       = "Application Styling",
                         width       = 12,
                         status      = "primary",
                         collapsible = TRUE,
                         collapsed   = styles_box_collapsed(),
-                        htmlOutput("styles"))})
+                        htmlOutput("styles"))
+})
