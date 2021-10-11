@@ -40,12 +40,16 @@ body2 <- shinydashboard::box( id     = "bodyElement2",
               collapsed   = TRUE,
               htmlOutput("proginfo") )
 
+app_styling <- htmlOutput("app_styling")
+
 body3 <- shinydashboard::box( id     = "bodyElement3",
               title  = "Downloadable Table",
               width  = 12,
               status = "primary",
               collapsible = TRUE,
               collapsed   = TRUE,
+              htmlOutput("table_info"),
+              hr(),
               downloadableTableUI("exampleDT1",
                                   list("csv", "tsv"),
                                   "Download table data") )
@@ -90,4 +94,4 @@ body6 <- shinydashboard::box( id     = "bodyElement6",
 
 # -- Register Elements in the ORDER SHOWN in the UI
 # --    Note: Will be added before the standard framework footer
-add_ui_body(list(body1, body2, body3, body4, body5, body6), append = FALSE)
+add_ui_body(list(body1, body2, app_styling, body3, body4, body5, body6), append = FALSE)

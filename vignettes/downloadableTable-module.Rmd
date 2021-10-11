@@ -141,42 +141,45 @@ needed.
 
 * `selection` parameter in the server function has different usage than `DT::datatable` `selection` option as it should be a function or reactive expression providing the row_ids of the rows that should be selected. Its default value is `NULL`
 * `editable`, `width` and `height` option in `DT::datatable` are not supported
+* The following is an example of customized table:
 
+<center><img src="figures/downloadableTable-2.jpg" width="500px"></center>
 
+It is generated using the following code:
 
 ```{r, eval = F}
 # Inside server_local.R
+sketch <- htmltools::withTags(table(
+    class = "display",
+    thead(
+        tr(
+            th(rowspan = 2, "Location"),
+            th(colspan = 2, "Statistics")
+        ),
+        tr(
+            th("Change"),
+            th("Increase")
+        )
+        
+    )
+))
 
-selectedrows <- downloadableTable("object_id1", 
-                                  logger = ss_userAction.Log,
-                                  filenameroot = "mydownload1",
-                                  downloaddatafxns = list(csv = mydatafxn1, 
-                                                          tsv = mydatafxn2),
-                                  tabledata = mydatafxn3,
-                                  rownames = FALSE,
-                                  caption = "This is a great table!  By: Me",
-                                  selection = mydataRowIds,
-                                  # custom column names
-                                  colnames = c("Column1", "Column2", "Column3"),
-                                  # where to place column filters controls
-                                  filter = "bottom", 
-                                  # table width
-                                  width = "150px",
-                                  # table height
-                                  height = "50px",
-                                  # add addition DT extension function
-                                  extensions = 'Buttons',
-                                  # needed for the extension function
-                                  dom = 'Bfrtip',
-                                  # the extension function buttons
-                                  buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
-                                  # custom style for "Column1"
-                                  formatStyle = list(columns = c('Column1'),  color = 'red'),
-                                  # advanced custom style for "Column2"
-                                  formatStyle = list(columns = c('Column2'), 
-                                                     color = DT::styleInterval(0, c('red', 'green'))),
-                                  # format "Column3" as a currency column
-                                  formatCurrency = list(columns = c('Column3'))))
+selectedrows <- downloadableTable("exampleDT1",
+                                  ss_userAction.Log,
+                                  "exampletable",
+                                  list(csv = load_data3, tsv = load_data3),
+                                  load_data3,
+                                  colnames = c("Area", "Delta", "Increase"),
+                                  filter = "bottom",
+                                  callback = htmlwidgets::JS("table.order([1, 'asc']).draw();"),
+                                  container = sketch,
+                                  formatStyle = list(columns = c("Total.Population.Change"),   
+                                                     color = DT::styleInterval(0, c("red", "green"))),
+                                  formatStyle = list(columns = c("Natural.Increase"),   
+                                                     backgroundColor = DT::styleInterval(c(7614, 15914, 34152),
+                                                                                         c("blue", "lightblue",
+                                                                                           "#FF7F7F", "red"))))
+
 
 # selectedrows is the reactive return value, captured for later use
 ```

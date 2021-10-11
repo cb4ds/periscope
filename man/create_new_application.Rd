@@ -101,6 +101,10 @@ Use this location for code that would have previously resided in server.R
 inside of the call to \code{shinyServer(...)}.  Anything placed in this
 file will be accessible only within a single user session.\cr
 \cr
+\strong{\emph{name}/www/periscope_style.yaml} :\cr
+This is the application custom styling yaml file. User can update
+appication different parts style using this file.\cr
+\cr
 \cr
 \strong{Do not modify the following files}: \cr
 \preformatted{
