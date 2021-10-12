@@ -69,7 +69,6 @@
 
     <div class="content-wrapper">
       <section class="content">
-        <script>$('.skin-blue .main-header .logo').css('background-color', $('.skin-blue .main-header .navbar').css('background-color'))</script>
         <div class="modal sbs-modal fade" id="titleinfobox" tabindex="-1" data-sbs-trigger="titleinfobox_trigger">
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -107,9 +106,7 @@
 # fw_create_body no log
 
     <div class="content-wrapper">
-      <section class="content">
-        <script>$('.skin-blue .main-header .logo').css('background-color', $('.skin-blue .main-header .navbar').css('background-color'))</script>
-      </section>
+      <section class="content"></section>
     </div>
 
 # ui_tooltip
