@@ -40,7 +40,13 @@ body2 <- shinydashboard::box( id     = "bodyElement2",
               collapsed   = TRUE,
               htmlOutput("proginfo") )
 
-app_styling <- htmlOutput("app_styling")
+app_styling <-  shinydashboard::box(id          = "app_styling",
+                                    title       = "Application Styling",
+                                    width       = 12,
+                                    status      = "primary",
+                                    collapsible = TRUE,
+                                    collapsed   = TRUE,
+                                    htmlOutput("styles"))
 
 body3 <- shinydashboard::box( id     = "bodyElement3",
               title  = "Downloadable Table",

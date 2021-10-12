@@ -27,7 +27,6 @@
 
 # -- VARIABLES --
 load_themes <- reactiveValues(themes = NULL)
-styles_box_collapsed <- reactiveVal(TRUE)
 
 
 # -- FUNCTIONS --
@@ -416,16 +415,7 @@ observeEvent(input$updateStyles, {
     load_themes$themes <- read_themes()
     styles_box_collapsed(FALSE)
     output$body <- renderUI({
-        periscope:::fw_create_body()
-    })  
-})
-
-output$app_styling <- renderUI({
-    shinydashboard::box(id          = "app_styling",
-                        title       = "Application Styling",
-                        width       = 12,
-                        status      = "primary",
-                        collapsible = TRUE,
-                        collapsed   = styles_box_collapsed(),
-                        htmlOutput("styles"))
+        list(periscope:::fw_create_body(),
+             shiny::tags$script("$('#app_styling').closest('.box').find('[data-widget=collapse]').click();"))
+    }) 
 })
