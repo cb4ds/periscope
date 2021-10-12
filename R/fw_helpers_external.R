@@ -145,8 +145,7 @@ fw_create_right_sidebar <- function() {
 
 # Framework UI Body Creation
 fw_create_body <- function() {
-    header_color_style          <- paste0("$('.skin-blue .main-header .logo').css('background-color',",
-                                          "$('.skin-blue .main-header .navbar').css('background-color'))")
+    header_color_style          <- "$('.logo').css('background-color', $('.navbar').css('background-color'))"
     update_right_side_bar_width <- paste0("$('.navbar-custom-menu').on('click',function() { ",
                                           "$('.control-sidebar-open').css('width', ", 
                                           "$('.main-sidebar').css('width'));});")
@@ -157,6 +156,7 @@ fw_create_body <- function() {
                                                    clearInterval(init_sidebar);
                                                }
                                                $('.control-sidebar').css('width', $('.main-sidebar').css('width'));
+                                               $('.logo').css('background-color', $('.navbar').css('background-color'));
                                            }
                                        }, 500);"
     app_info <- shiny::isolate(.g_opts$app_info)
