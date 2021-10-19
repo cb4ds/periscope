@@ -69,6 +69,21 @@
 
     <div class="content-wrapper">
       <section class="content">
+        <script>$('.navbar-custom-menu').on('click',
+                                               function() {
+                                                   main_width = $('.main-sidebar').css('width');
+                                                   if ($('.control-sidebar-open').length != 0) {
+                                                       $('.control-sidebar-open').css('width', main_width);
+                                                       $('.control-sidebar-bg').css('width', main_width);
+                                                       $('.control-sidebar-bg').css('right', '0px' );
+                                                       $('.control-sidebar').css('right', '0px');
+                                                   } else {
+                                                      $('.control-sidebar-bg').css('right', '-' + main_width);
+                                                      $('.control-sidebar').css('right', '-' +  main_width);
+                                                      $('.control-sidebar').css('width', '-' +  main_width);
+                                                   }
+                                               });</script>
+        <script>$('.logo').css('background-color', $('.navbar').css('background-color'))</script>
         <div class="modal sbs-modal fade" id="titleinfobox" tabindex="-1" data-sbs-trigger="titleinfobox_trigger">
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -106,7 +121,23 @@
 # fw_create_body no log
 
     <div class="content-wrapper">
-      <section class="content"></section>
+      <section class="content">
+        <script>$('.navbar-custom-menu').on('click',
+                                               function() {
+                                                   main_width = $('.main-sidebar').css('width');
+                                                   if ($('.control-sidebar-open').length != 0) {
+                                                       $('.control-sidebar-open').css('width', main_width);
+                                                       $('.control-sidebar-bg').css('width', main_width);
+                                                       $('.control-sidebar-bg').css('right', '0px' );
+                                                       $('.control-sidebar').css('right', '0px');
+                                                   } else {
+                                                      $('.control-sidebar-bg').css('right', '-' + main_width);
+                                                      $('.control-sidebar').css('right', '-' +  main_width);
+                                                      $('.control-sidebar').css('width', '-' +  main_width);
+                                                   }
+                                               });</script>
+        <script>$('.logo').css('background-color', $('.navbar').css('background-color'))</script>
+      </section>
     </div>
 
 # ui_tooltip

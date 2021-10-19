@@ -146,19 +146,21 @@ fw_create_right_sidebar <- function() {
 # Framework UI Body Creation
 fw_create_body <- function() {
     header_color_style          <- "$('.logo').css('background-color', $('.navbar').css('background-color'))"
-    update_right_side_bar_width <- paste0("$('.navbar-custom-menu').on('click',function() { ",
-                                          "$('.control-sidebar-open').css('width', ", 
-                                          "$('.main-sidebar').css('width'));});")
-    init_right_bar              <- "init_sidebar = setInterval(
-                                        function() {
-                                           if ($('html').attr('class') !='shiny-busy') {
-                                               if ($('.control-sidebar').css('width') == $('.main-sidebar').css('width')) {
-                                                   clearInterval(init_sidebar);
+    update_right_side_bar_width <- "$('.navbar-custom-menu').on('click',
+                                           function() {
+                                               main_width = $('.main-sidebar').css('width');
+                                               if ($('.control-sidebar-open').length != 0) {
+                                                   $('.control-sidebar-open').css('width', main_width);
+                                                   $('.control-sidebar-bg').css('width', main_width);
+                                                   $('.control-sidebar-bg').css('right', '0px' );
+                                                   $('.control-sidebar').css('right', '0px');
+                                               } else {
+                                                  $('.control-sidebar-bg').css('right', '-' + main_width);
+                                                  $('.control-sidebar').css('right', '-' +  main_width);
+                                                  $('.control-sidebar').css('width', '-' +  main_width);
                                                }
-                                               $('.control-sidebar').css('width', $('.main-sidebar').css('width'));
-                                               $('.logo').css('background-color', $('.navbar').css('background-color'));
-                                           }
-                                       }, 500);"
+                                           });"
+                                           
     app_info <- shiny::isolate(.g_opts$app_info)
     info_content <- NULL
 
@@ -175,10 +177,9 @@ fw_create_body <- function() {
         fresh::use_theme(create_theme()),
         shiny::tags$head(
             shiny::tags$style(.framework_css()),
-            shiny::tags$script(.framework_js()),
-            shiny::tags$script(shiny::HTML(header_color_style)),
-            shiny::tags$script(shiny::HTML(update_right_side_bar_width)),
-            shiny::tags$script(init_right_bar)),
+            shiny::tags$script(.framework_js())),
+        shiny::tags$script(update_right_side_bar_width),
+        shiny::tags$script(header_color_style),
         info_content,
         shiny::isolate(.g_opts$body_elements),
         if (shiny::isolate(.g_opts$show_userlog)) {
