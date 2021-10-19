@@ -252,7 +252,7 @@ output$table_info <- renderUI({
                                 tags$li("Table addons options:", HTML("&nbsp;"),
                                         tags$b(tags$i("i.e. 'filter', 'callback', ..."))))),
                 tags$li("For more information about table options please visit",
-                        tags$a("DT documentation", href = "https://rstudio.github.io/DT/"))
+                        tags$a("DT documentation", target = '_blank', href = "https://rstudio.github.io/DT/"))
         ))
 })
 
