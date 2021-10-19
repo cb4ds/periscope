@@ -354,7 +354,11 @@ observeEvent(input$showWorking, {
 })
 
 output$body <- renderUI({
-    periscope:::fw_create_body()
+    list(
+        periscope:::fw_create_body(),
+        shiny::tags$script(shiny::HTML("setTimeout(function (){$('div.navbar-custom-menu').click()}, 1000);")),
+        shiny::tags$script(shiny::HTML("$('div.navbar-custom-menu').click();"))
+    )
 })
 
 observeEvent(input$updateStyles, {
@@ -413,9 +417,10 @@ observeEvent(input$updateStyles, {
     
     write(lines, "www/periscope_style.yaml", append = F)
     load_themes$themes <- read_themes()
-    styles_box_collapsed(FALSE)
     output$body <- renderUI({
         list(periscope:::fw_create_body(),
-             shiny::tags$script("$('#app_styling').closest('.box').find('[data-widget=collapse]').click();"))
+             shiny::tags$script("$('#app_styling').closest('.box').find('[data-widget=collapse]').click();"),
+             shiny::tags$script(shiny::HTML("setTimeout(function (){$('div.navbar-custom-menu').click()}, 1000);")),
+             shiny::tags$script(shiny::HTML("$('div.navbar-custom-menu').click();")))
     }) 
 })
