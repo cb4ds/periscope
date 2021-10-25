@@ -336,7 +336,6 @@ observeEvent(input$exampleAdvancedAlert, {
     createAlert(session, "sidebarAdvancedAlert",
                 style = "warning",
                 content = "Example Advanced Sidebar Alert")
-    
 })
 
 observeEvent(input$exampleRightAlert, {
@@ -430,8 +429,8 @@ observeEvent(input$updateStyles, {
     }) 
 })
 
-init_js_command <- function(){
-    list(shiny::tags$script("setTimeout(function (){$('div.navbar-custom-menu').click()}, 1000);"),
+init_js_command <- function() {
+    list(shiny::tags$script("setTimeout(function() {$('div.navbar-custom-menu').click()}, 1000);"),
          shiny::tags$script("$('div.navbar-custom-menu').click();"),
          shiny::tags$script("$('#examplePlot2-dplotButtonDiv').css('display', 'inherit')"),
          shiny::tags$script("$('#examplePlot3-dplotButtonDiv').css('display', 'inherit')"))
