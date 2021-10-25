@@ -262,7 +262,7 @@ sketch <- htmltools::withTags(
             tr(
                 th("Change"),
                 th("Increase")))
-))
+        ))
 
 downloadableTable("exampleDT1",
                   ss_userAction.Log,
@@ -354,11 +354,8 @@ observeEvent(input$showWorking, {
 })
 
 output$body <- renderUI({
-    list(
-        periscope:::fw_create_body(),
-        shiny::tags$script(shiny::HTML("setTimeout(function (){$('div.navbar-custom-menu').click()}, 1000);")),
-        shiny::tags$script(shiny::HTML("$('div.navbar-custom-menu').click();"))
-    )
+    list(periscope:::fw_create_body(),
+         init_js_command())
 })
 
 observeEvent(input$updateStyles, {
@@ -420,7 +417,13 @@ observeEvent(input$updateStyles, {
     output$body <- renderUI({
         list(periscope:::fw_create_body(),
              shiny::tags$script("$('#app_styling').closest('.box').find('[data-widget=collapse]').click();"),
-             shiny::tags$script(shiny::HTML("setTimeout(function (){$('div.navbar-custom-menu').click()}, 1000);")),
-             shiny::tags$script(shiny::HTML("$('div.navbar-custom-menu').click();")))
+             init_js_command())
     }) 
 })
+
+init_js_command <- function(){
+    list(shiny::tags$script("setTimeout(function (){$('div.navbar-custom-menu').click()}, 1000);"),
+         shiny::tags$script("$('div.navbar-custom-menu').click();"),
+         shiny::tags$script("$('#examplePlot2-dplotButtonDiv').css('display', 'inherit')"),
+         shiny::tags$script("$('#examplePlot3-dplotButtonDiv').css('display', 'inherit')"))
+}
