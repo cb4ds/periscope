@@ -225,7 +225,8 @@ sketch <- htmltools::withTags(
             tr(
                 th("Change"),
                 th("Increase")))
-    ))
+))
+
 
 downloadableTable("exampleDT1",
                   ss_userAction.Log,
