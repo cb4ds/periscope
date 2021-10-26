@@ -159,8 +159,8 @@ output$hover_info <- renderUI({
 
 output$styles <- renderUI({
     load_themes$themes <- read_themes()
-    list(p("User can control application styles using www/periscope_style.yaml.\n The following parameters explain how to use that file."),
-         p("Note. Color values can be:",
+    list(p("User can control primary aspects of the application's styles by modifying the www/periscope_style.yaml file.\n This interactive example can be used to explore those parameters."),
+         p("Color values can be specified as:",
            tags$ul(tags$li("Hex Value:", HTML("&nbsp;"), tags$b(tags$i("i.e. '#31A5CC'"))),
                    tags$li("RGB Value:", HTML("&nbsp;"), tags$b(tags$i("i.e. 'rgb(49, 165, 204)'"))),
                    tags$li("Color Name:", HTML("&nbsp;"), tags$b(tags$i("i.e. 'green', 'red', ..."))))),
@@ -247,20 +247,21 @@ downloadableTable("exampleDT1",
                                      color = DT::styleInterval(0, c("red", "green"))),
                   formatStyle = list(columns = c("Natural.Increase"),   
                                      backgroundColor = DT::styleInterval(c(7614, 15914, 34152),
-                                                                         c("blue", "lightblue", "#FF7F7F", "red"))))
+                                                                         c("lightgray", "gray", "cadetblue", "#808000"))))
 
 
 output$table_info <- renderUI({
     list(
-        tags$ul(tags$li("User can customize downloadableTable modules through many options. such as:",
-                        tags$ul(tags$li("Table labels options:", HTML("&nbsp;"),
+        tags$ul(tags$li("User can customize downloadableTable modules using DT options such as:",
+                        tags$ul(tags$li("labels:", HTML("&nbsp;"),
                                         tags$b(tags$i("i.e. 'colnames', 'caption', ..."))),
-                                tags$li("Table layout and columns styles options:", HTML("&nbsp;"),
+                                tags$li("layout and columns styles:", HTML("&nbsp;"),
                                         tags$b(tags$i("i.e. 'container', 'formatStyle', ..."))),
-                                tags$li("Table addons options:", HTML("&nbsp;"),
+                                tags$li("other addons:", HTML("&nbsp;"),
                                         tags$b(tags$i("i.e. 'filter', 'callback', ..."))))),
-                tags$li("For more information about table options please visit",
-                        tags$a("DT documentation", target = "_blank", href = "https://rstudio.github.io/DT/"))
+                tags$li("For more information about table options please visit the",
+                        tags$a("DT documentation", target = "_blank", href = "https://rstudio.github.io/DT/"),
+                        "site")
         ))
 })
 

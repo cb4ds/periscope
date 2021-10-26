@@ -177,8 +177,8 @@ selectedrows <- downloadableTable("exampleDT1",
                                                      color = DT::styleInterval(0, c("red", "green"))),
                                   formatStyle = list(columns = c("Natural.Increase"),   
                                                      backgroundColor = DT::styleInterval(c(7614, 15914, 34152),
-                                                                                         c("blue", "lightblue",
-                                                                                           "#FF7F7F", "red"))))
+                                                                                         c("lightgray", "gray", "cadetblue", "#808000"))))
+
 
 
 # selectedrows is the reactive return value, captured for later use

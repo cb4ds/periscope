@@ -383,6 +383,6 @@ create_default_theme_file <- function(theme_file) {
                "### infobox_color",
                "# Valid values are names of the color or hex-decimal value of the color (i.e,: \"blue\", \"#086A87\").",
                "# Blank/empty value will use default value",
-               "infobox_color: ")
+               "infobox_color: \n")
     writeLines(lines, theme_file) 
 }

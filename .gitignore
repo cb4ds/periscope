@@ -4,5 +4,6 @@
 .Ruserdata
 **/.DS_Store
 vignettes/*.html
+vignettes/*.R
 **/log
 .project

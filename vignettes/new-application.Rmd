@@ -467,7 +467,7 @@ needs.  *(i.e. you would source a file in server_local.R to scope by user
 session, server_global.R to scope across all sessions, and global.R to scope 
 across all sessions and UI)*
 
-#### wwww/periscope_style.yaml
+#### www/periscope_style.yaml
 
 Updated this file values and restart app to customize application different parts styles.
 
