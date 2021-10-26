@@ -160,11 +160,11 @@ Different parts of the generated application can be customized with a custom yam
 
 * User can update the values for **periscope_style.yaml** then restart the application so new changes can take affect.
 * User can pass an existing **periscope_style.yaml** from an existing app to new one through passing its location to `custom_theme_file` parameter in `create_new_application` method.
-* Sample apps contain a widget for updating app styles momentarily as follow:
+* The sample applications contain a section to explore updating some styles interactively:
 
-<center><img src="figures/App_Styling.jpg" width="800px"></center>
+<center><img src="figures/sample_app_styling.jpg" width="800px"></center>
 
-* The generated yaml file for blank applications will contain no values for the properties. So application will use default style options.
+* The generated yaml file for blank applications will contain no values for the properties -- blank application will use default style options unless they are customized.
 
 *See the Creating a Sample Application and Creating your Application sections for an example* 
 

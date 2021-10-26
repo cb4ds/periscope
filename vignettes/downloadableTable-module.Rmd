@@ -137,11 +137,12 @@ needed.
 **Customization Options**
 
 *downloadableTable* module can be customized using the same `?DT::datatable` arguments. options or format functions. These options can be sent as a named options via the server function, see example below. 
-*Note*: 
+*Notes*: 
 
 * `selection` parameter in the server function has different usage than `DT::datatable` `selection` option as it should be a function or reactive expression providing the row_ids of the rows that should be selected. Its default value is `NULL`
-* `editable`, `width` and `height` option in `DT::datatable` are not supported
-* The following is an example of customized table:
+* `editable`, `width`, `height` options in `DT::datatable` are not supported
+
+The following is an example of a customized downloadableTable:
 
 <center><img src="figures/downloadableTable-2.jpg" width="500px"></center>
 
@@ -176,12 +177,11 @@ selectedrows <- downloadableTable("exampleDT1",
                                   formatStyle = list(columns = c("Total.Population.Change"),   
                                                      color = DT::styleInterval(0, c("red", "green"))),
                                   formatStyle = list(columns = c("Natural.Increase"),   
-                                                     backgroundColor = DT::styleInterval(c(7614, 15914, 34152),
-                                                                                         c("lightgray", "gray", "cadetblue", "#808000"))))
+                                                     backgroundColor = DT::styleInterval(
+                                                         c(7614, 15914, 34152),
+                                                         c("blue", "lightblue", "#FF7F7F", "red"))))
 
-
-
-# selectedrows is the reactive return value, captured for later use
+# NOTE: selectedrows is the reactive return value, captured for later use
 ```
 
 
