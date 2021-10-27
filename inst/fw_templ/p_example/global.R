@@ -10,7 +10,10 @@
 # ----------------------------------------
 
 # -- IMPORTS --
+library(shiny)
+library(periscope)
 library(canvasXpress)
+
 
 # -- Setup your Application --
 set_app_parameters(title = "Sample Title (click for an info pop-up)",
