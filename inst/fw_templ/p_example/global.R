@@ -10,8 +10,6 @@
 # ----------------------------------------
 
 # -- IMPORTS --
-library(shiny)
-library(periscope)
 library(canvasXpress)
 
 
