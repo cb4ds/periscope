@@ -1,5 +1,9 @@
 ## Comments from Maintainer
 
+Resubmission comments:
+Updated travis link in Readme file
+
+Initial comments: 
 This is a major functionality update including changing the shiny module paradigm, supporting additional DT options in downloadableTables and updating the styling paradigm to allow more flexibility when customizing periscope applications.  This release is compatible with apps created with the 0.x version of the package and
 documentation including the sample applications, examples, vignettes, tests, etc. were also updated.
 
