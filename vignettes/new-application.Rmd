@@ -224,7 +224,8 @@ user's system.
 ## Step 2: Run
 
 ```{r, eval=F}
-runApp('mytestapp', appDir = app_dir)
+runApp(paste(app_dir, 'mytestapp', sep = .Platform$file.sep))
+
 ```
 
 The application should run in either the viewer or browser (depending on system
@@ -421,8 +422,7 @@ output$example1 <- renderUI({
          p("Some great explanatory text in my application"))
     })
 
-callModule(downloadFile, "ex_d1", ss_userAction.Log, "mydownload", 
-           list(csv=get_ref_data))
+downloadFile("ex_d1", ss_userAction.Log, "mydownload", list(csv=get_ref_data))
 
 observeEvent(input$exButton, {
     loginfo("exButton Pressed!", logger = ss_userAction.Log)
