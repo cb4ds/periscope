@@ -417,11 +417,11 @@ observeEvent(input$updateStyles, {
     req(input$body_background_color)
     req(input$box_color)
     
-    apply_themes(input$primary_color, 
-                 input$sidebar_width, 
-                 input$sidebar_background_color, 
-                 input$body_background_color, 
-                 input$box_color)
+    apply_themes(primary_color            = input$primary_color, 
+                 sidebar_width            = input$sidebar_width, 
+                 sidebar_background_color = input$sidebar_background_color,
+                 body_background_color    = input$body_background_color, 
+                 box_color                = input$box_color)
     
     output$body <- renderUI({
         list(periscope:::fw_create_body(),
@@ -431,7 +431,12 @@ observeEvent(input$updateStyles, {
 })
 
 observeEvent(TRUE, {
-    apply_themes("#4F718F", "300", "#A0B89E", "#EDECE8", "#DAE0D9")
+    apply_themes(primary_color            = "#4F718F", 
+                 sidebar_width            = "300", 
+                 sidebar_background_color = "#A0B89E", 
+                 body_background_color    = "#EDECE8", 
+                 box_color                = "#DAE0D9")
+    
     output$body <- renderUI({
         list(periscope:::fw_create_body(),
              init_js_command())
