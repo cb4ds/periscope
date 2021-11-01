@@ -312,6 +312,58 @@ output$body <- renderUI({
          init_js_command())
 })
 
+apply_themes <- function(primary_color, sidebar_width, sidebar_background_color, body_background_color, box_color) {
+    lines <- c("### primary_color",
+               "# Sets the primary status color that affects the color of the header, valueBox, infoBox and box.",
+               "# Valid values are names of the color or hex-decimal value of the color (i.e,: \"blue\", \"#086A87\").",
+               "# Blank/empty value will use default value",
+               paste0("primary_color: '", primary_color, "'\n\n"),
+               
+               
+               "# Sidebar variables: change the default sidebar width, colors:",
+               "### sidebar_width",
+               "# Width is to be specified as a numeric value in pixels. Must be greater than 0 and include numbers only.",
+               "# Valid possible value are 200, 350, 425, ...",
+               "# Blank/empty value will use default value",
+               paste0("sidebar_width: ", sidebar_width, "\n"),
+               
+               "### sidebar_background_color",
+               "# Valid values are names of the color or hex-decimal value of the color (i.e,: \"blue\", \"#086A87\").",
+               "# Blank/empty value will use default value",
+               paste0("sidebar_background_color: '", sidebar_background_color, "'\n"),
+               
+               "### sidebar_hover_color",
+               "# The color of sidebar menu item upon hovring with mouse.",
+               "# Valid values are names of the color or hex-decimal value of the color (i.e,: \"blue\", \"#086A87\").",
+               "# Blank/empty value will use default value",
+               "sidebar_hover_color: \n",
+               
+               "### sidebar_text_color",
+               "# Valid values are names of the color or hex-decimal value of the color (i.e,: \"blue\", \"#086A87\").",
+               "# Blank/empty value will use default value",
+               "sidebar_text_color: \n\n",
+               
+               "# body variables",
+               "### body_background_color",
+               "# Valid values are names of the color or hex-decimal value of the color (i.e,: \"blue\", \"#086A87\").",
+               "# Blank/empty value will use default value",
+               paste0("body_background_color: '", body_background_color, "'\n"),
+               
+               "# boxes variables",
+               "### box_color",
+               "# Valid values are names of the color or hex-decimal value of the color (i.e,: \"blue\", \"#086A87\").",
+               "# Blank/empty value will use default value",
+               paste0("box_color: '", box_color, "'\n"),
+               
+               "### infobox_color",
+               "# Valid values are names of the color or hex-decimal value of the color (i.e,: \"blue\", \"#086A87\").",
+               "# Blank/empty value will use default value",
+               "infobox_color: ")
+    
+    write(lines, "www/periscope_style.yaml", append = F)
+    load_themes$themes <- read_themes()
+}
+
 observeEvent(input$updateStyles, {
     req(input$primary_color)
     req(input$sidebar_width)
@@ -319,32 +371,25 @@ observeEvent(input$updateStyles, {
     req(input$body_background_color)
     req(input$box_color)
     
-    colourpicker::updateColourInput(session, "primary_color", value = input$primary_color)
-    updateNumericInput(session, "sidebar_width", value = input$sidebar_width)
-    colourpicker::updateColourInput(session, "sidebar_background_color", value = input$sidebar_background_color)
-    colourpicker::updateColourInput(session, "body_background_color", value = input$body_background_color)
-    colourpicker::updateColourInput(session, "box_color", value = input$box_color)
-    
-    custom_theme <- fresh::create_theme(
-        fresh::adminlte_color(
-            light_blue = input$primary_color
-        ),
-        fresh::adminlte_sidebar(
-            width = paste0(input$sidebar_width, "px"),
-            dark_bg = input$sidebar_background_color
-        ),
-        fresh::adminlte_global(
-            content_bg = input$body_background_color,
-            box_bg = input$box_color
-        )
-    )
+    apply_themes(input$primary_color, 
+                 input$sidebar_width, 
+                 input$sidebar_background_color, 
+                 input$body_background_color, 
+                 input$box_color)
     
     output$body <- renderUI({
         list(periscope:::fw_create_body(),
-             fresh::use_theme(custom_theme),
              shiny::tags$script("$('#app_styling').closest('.box').find('[data-widget=collapse]').click();"),
              init_js_command())
     }) 
+})
+
+observeEvent(TRUE, {
+    apply_themes("#4F718F", "300", "#A0B89E", "#EDECE8", "#DAE0D9")
+    output$body <- renderUI({
+        list(periscope:::fw_create_body(),
+             init_js_command())
+    })
 })
 
 init_js_command <- function() {
