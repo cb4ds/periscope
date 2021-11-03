@@ -78,7 +78,7 @@
 #' \cr
 #' \strong{\emph{name}/www/periscope_style.yaml} :\cr
 #' This is the application custom styling yaml file. User can update
-#' appication different parts style using this file.\cr
+#' application different parts style using this file.\cr
 #' \cr
 #' \cr
 #' \strong{Do not modify the following files}: \cr
@@ -383,6 +383,6 @@ create_default_theme_file <- function(theme_file) {
                "### infobox_color",
                "# Valid values are names of the color or hex-decimal value of the color (i.e,: \"blue\", \"#086A87\").",
                "# Blank/empty value will use default value",
-               "infobox_color: ")
+               "infobox_color: \n")
     writeLines(lines, theme_file) 
 }
