@@ -26,7 +26,6 @@ jobs:
           command: |
             R -e 'install.packages(c("shinydashboard", "shinyBS", "DT", "writexl", "fresh"))'
             R -e 'install.packages(c("canvasXpress", "shinydashboardPlus", "colourpicker", "openxlsx"))'
-            R -e 'install.packages("covr")'
 
       - run:
           name: Session information and installed package versions
@@ -38,11 +37,6 @@ jobs:
       - run:
           name: Build package
           command: R CMD build .
-
-      - run:
-          name: Check coverage
-          command: Rscript -e 'library(covr); codecov(quiet = FALSE)'
-          
 
       - run:
           name: Check package
@@ -74,7 +68,7 @@ jobs:
           command: |
             R -e 'install.packages(c("shinydashboard", "shinyBS", "DT", "writexl", "fresh"))'
             R -e 'install.packages(c("canvasXpress", "shinydashboardPlus", "colourpicker", "openxlsx"))'
-            R -e 'install.packages("covr")'
+
       - run:
           name: Session information and installed package versions
           command: |
@@ -85,10 +79,6 @@ jobs:
       - run:
           name: Build package
           command: R CMD build .
-
-      - run:
-          name: Check coverage
-          command: Rscript -e 'library(covr); codecov(quiet = FALSE)'
 
       - run:
           name: Check package
