@@ -24,8 +24,8 @@ jobs:
       - run:
           name: Install R dependencies
           command: |
-            R -e 'install.packages(c("shinydashboard", "shinyBS", "DT", "writexl", "fresh"))'
-            R -e 'install.packages(c("canvasXpress", "shinydashboardPlus", "colourpicker", "openxlsx"))'
+            R -e 'install.packages(c("shiny", "shinydashboard", "shinyBS", "DT", "writexl", "fresh"))'
+            R -e 'install.packages(c("testthat", "canvasXpress", "shinydashboardPlus", "colourpicker", "openxlsx"))'
 
       - run:
           name: Session information and installed package versions
