@@ -24,8 +24,9 @@ jobs:
       - run:
           name: Install R dependencies
           command: |
-            R -e 'install.packages("covr", "shinydashboard", "shinyBS", "DT", "writexl", "fresh")'
+            R -e 'install.packages("shinydashboard", "shinyBS", "DT", "writexl", "fresh")'
             R -e 'install.packages("canvasXpress", "shinydashboardPlus", "colourpicker")'
+            R -e 'install.packages("covr")
 
       - run:
           name: Session information and installed package versions
@@ -117,7 +118,9 @@ jobs:
       - run:
           name: Install R dependencies
           command: |
-            R -e 'install.packages("covr")'
+            R -e 'install.packages("shinydashboard", "shinyBS", "DT", "writexl", "fresh")'
+            R -e 'install.packages("canvasXpress", "shinydashboardPlus", "colourpicker")'
+            R -e 'install.packages("covr")
 
       - run:
           name: Session information and installed package versions
