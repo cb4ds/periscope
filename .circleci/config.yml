@@ -45,6 +45,8 @@ jobs:
             R -e 'install.packages("png")'
             # Perform package check
             R CMD check *tar.gz
+            # check the output log
+            cat /root/project/periscope.Rcheck/00check.log
 
   Build-for-r4_0_5:
     docker:
@@ -140,6 +142,6 @@ workflows:
   version: 2
   Prepare-All-R-Editions:
     jobs:
-      - Build-for-r4_0_5
       - Build-for-r3_6_3
-      - Build-for-rLATEST
+      # - Build-for-r4_0_5
+      # - Build-for-rLATEST
