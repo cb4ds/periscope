@@ -1,7 +1,7 @@
 ## Comments from Maintainer
 
 Resubmission Comments:
-* permanent redirect for CircleCI was not caught on RHub or WinBuilder, corrected the URL in the readme
+* permanent redirect for CircleCI was not caught, corrected the URL in the readme
 
 Original Comments:
 Minor bugfix release to update icons, templated examples
