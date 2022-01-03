@@ -7,3 +7,4 @@
 ^winbuilder_results$
 ^CRAN-RELEASE$
 ^\.circleci$
+^CRAN-SUBMISSION$
