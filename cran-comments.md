@@ -1,5 +1,9 @@
 ## Comments from Maintainer
 
+Resubmission Comments:
+* permanent redirect for CircleCI was not caught, corrected the URL in the readme
+
+Original Comments:
 Minor bugfix release to update icons, templated examples
 
 ---  
@@ -15,7 +19,6 @@ RStudio Server Pro (Ubuntu 18.04.2)
 
 CircleCI
 
-* R 3.6.3
 * R 4.0.5
 * R 4.1.2
 
