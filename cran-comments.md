@@ -1,6 +1,6 @@
 ## Comments from Maintainer
 
-Bugfixes for the changes in utils::packageVersion and class checks in the package and tests
+Updated package documentation per issue instructions
 
 ---  
     
