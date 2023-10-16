@@ -1,5 +1,10 @@
 #Revisions and Change Log
 
+#### v1.0.3
+* Resolved outstanding Roxygen 7+ issue: https://github.com/r-lib/roxygen2/issues/1491
+
+### v1.0.2
+* Minor bugfixes - handled classes and packageversion checking in compliance with latest R requirements to resolve notes
 
 ### v1.0.1
 * Minor bugfixes - updated font awesome icons (to v5 compatible)

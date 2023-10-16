@@ -38,6 +38,7 @@
 #' @docType package
 #'
 #' @name periscope
+#' @aliases periscope-package
 NULL
 
 .g_sdp_installed <- FALSE
@@ -45,7 +46,7 @@ NULL
 
 .onLoad <- function(libname, pkgname) {
     if (length(find.package('shinydashboardPlus', quiet = T)) > 0) {
-        if (utils::packageVersion('shinydashboardPlus') < 2) {
+        if (utils::packageVersion('shinydashboardPlus') < "2") {
             .g_sdp_oldver <<- TRUE
         }
         .g_sdp_installed <<- TRUE
