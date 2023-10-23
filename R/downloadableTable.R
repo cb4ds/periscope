@@ -299,7 +299,7 @@ download_table <- function(input, output, session,
         sourcedata <- dtInfo$tabledata
         
         if (!is.null(sourcedata) && nrow(sourcedata) > 0) {
-            row.names <- rownames(sourcedata)
+            row.names <- rowNames(sourcedata)
             row.ids   <- as.character(seq(1:nrow(sourcedata)))
             if (is.null(row.names) || identical(row.names, row.ids)) {
                 DT_RowId <- paste0("rowid_", row.ids)
