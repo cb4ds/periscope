@@ -1,5 +1,8 @@
 #Revisions and Change Log
 
+#### v1.0.4
+* Minor bugfix for reactive return on downloadableTables when using initial selections
+
 #### v1.0.3
 * Resolved outstanding Roxygen 7+ issue: https://github.com/r-lib/roxygen2/issues/1491
 
